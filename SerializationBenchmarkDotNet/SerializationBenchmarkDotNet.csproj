@@ -20,10 +20,4 @@
       <ProjectReference Include="..\FlatBuffers\FlatBuffers.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Update="CSharpHtml.txt">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
 </Project>

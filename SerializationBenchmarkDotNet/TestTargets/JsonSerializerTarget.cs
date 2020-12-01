@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 
 namespace DotNetSerializationBenchmark
 {
-	internal class JsonSerializerTarget : ATestTarget
+	internal class JsonSerializerTarget : ASerializerTarget
 	{
 		MemoryStream stream = null;
 		private JsonSerializer jsonSerializer;
@@ -22,6 +22,11 @@ namespace DotNetSerializationBenchmark
 		public JsonSerializerTarget(): base()
 		{
 			jsonSerializer = new JsonSerializer();
+		}
+
+		public override void Cleanup()
+		{
+			stream = null;
 		}
 
 		protected override long Serialize<T>(T original)

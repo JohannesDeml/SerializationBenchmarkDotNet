@@ -26,10 +26,10 @@ namespace DotNetSerializationBenchmark
 		}
 	}
 
-	public abstract class ATestTarget
+	public abstract class ASerializerTarget
 	{
 		private Dictionary<Type, TestResult> results;
-		protected ATestTarget()
+		protected ASerializerTarget()
 		{
 			results = new Dictionary<Type, TestResult>();
 		}
@@ -63,6 +63,8 @@ namespace DotNetSerializationBenchmark
 
 			return false;
 		}
+
+		public abstract void Cleanup();
 			
 		protected abstract long Serialize<T>(T original);
 		protected abstract T Deserialize<T>();

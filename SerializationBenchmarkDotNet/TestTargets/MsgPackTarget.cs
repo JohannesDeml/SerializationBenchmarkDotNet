@@ -10,9 +10,14 @@
 
 namespace DotNetSerializationBenchmark
 {
-	internal class MsgPackTarget : ATestTarget
+	internal class MsgPackTarget : ASerializerTarget
 	{
 		byte[] bytes;
+		public override void Cleanup()
+		{
+			bytes = null;
+		}
+
 		protected override long Serialize<T>(T original)
 		{
 			bytes = MsgPack.Serialization.MessagePackSerializer.Get<T>().PackSingleObject(original);

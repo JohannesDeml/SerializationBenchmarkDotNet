@@ -12,7 +12,7 @@ using MessagePack;
 
 namespace DotNetSerializationBenchmark
 {
-	internal class Lz4MessagePackCSharpTarget : ATestTarget
+	internal class Lz4MessagePackCSharpTarget : ASerializerTarget
 	{
 		byte[] bytes;
 		MessagePackSerializerOptions lz4Options;
@@ -20,6 +20,11 @@ namespace DotNetSerializationBenchmark
 		public Lz4MessagePackCSharpTarget(): base()
 		{
 			lz4Options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
+		}
+
+		public override void Cleanup()
+		{
+			bytes = null;
 		}
 
 		protected override long Serialize<T>(T original)

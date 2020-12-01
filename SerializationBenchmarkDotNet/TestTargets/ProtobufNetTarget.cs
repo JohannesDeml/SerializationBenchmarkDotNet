@@ -12,9 +12,14 @@ using System.IO;
 
 namespace DotNetSerializationBenchmark
 {
-	internal class ProtobufNetTarget : ATestTarget
+	internal class ProtobufNetTarget : ASerializerTarget
 	{
 		MemoryStream stream = null;
+
+		public override void Cleanup()
+		{
+			stream = null;
+		}
 
 		protected override long Serialize<T>(T original)
 		{

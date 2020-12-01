@@ -13,14 +13,21 @@ using System.IO;
 
 namespace DotNetSerializationBenchmark
 {
-	internal class NetSerializerTarget : ATestTarget
+	internal class NetSerializerTarget : ASerializerTarget
 	{
 		MemoryStream stream = null;
 		private NetSerializer.Serializer netSerializer;
 
-		public NetSerializerTarget(Type[] rootTypes): base()
+		public NetSerializerTarget(): base()
 		{
+			// This needs to be extended, if more types are added for testing
+			var rootTypes = new[] {typeof(Person[]), typeof(Vector3[])};
 			netSerializer = new NetSerializer.Serializer(rootTypes);
+		}
+
+		public override void Cleanup()
+		{
+			stream = null;
 		}
 
 		protected override long Serialize<T>(T original)
