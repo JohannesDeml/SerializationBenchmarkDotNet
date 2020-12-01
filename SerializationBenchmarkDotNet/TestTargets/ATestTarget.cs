@@ -26,7 +26,7 @@ namespace DotNetSerializationBenchmark
 		}
 	}
 
-	internal abstract class ATestTarget
+	public abstract class ATestTarget
 	{
 		private Dictionary<Type, TestResult> results;
 		protected ATestTarget()
