@@ -55,7 +55,7 @@ namespace DotNetSerializationBenchmark
 
 		public bool Equals(Person other)
 		{
-			return Age == other.Age && FirstName == other.FirstName && LastName == other.LastName && Sex == other.Sex;
+			return other != null && Age == other.Age && FirstName == other.FirstName && LastName == other.LastName && Sex == other.Sex;
 		}
 	}
 }
