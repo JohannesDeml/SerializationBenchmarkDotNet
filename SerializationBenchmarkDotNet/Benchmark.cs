@@ -10,7 +10,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 
@@ -73,23 +72,36 @@ namespace DotNetSerializationBenchmark
 		}
 
 		[IterationCleanup(Target = nameof(Deserialize))]
-		public void ValidateAndCleanupIteration()
+		public void ValidateDeserialization()
 		{
-			if (!Serializer.ValidateList<Person[], Person>(personArray))
-			{
-				Console.WriteLine($"Validation error for {nameof(personArray)} for target {Serializer.GetType()}");
-			}
-
-			if (!Serializer.ValidateList<Vector3[], Vector3>(vector3Array))
-			{
-				Console.WriteLine($"Validation error for {nameof(vector3Array)} for target {Serializer.GetType()}");
-			}
+			ValidateArray(personArray);
+			ValidateArray(vector3Array);
 		}
 
 		[GlobalCleanup]
 		public void GlobalCleanup()
 		{
 			Serializer.Cleanup();
+		}
+		
+		private bool Validate<T>(T original) where T : IEquatable<T>
+		{
+			bool valid = Serializer.Validate(original);
+			if (!valid)
+			{
+				Console.WriteLine($"Validation error for {original.GetType()} with serializer {Serializer.GetType()}");
+			}
+			return valid;
+		}
+
+		private bool ValidateArray<T>(T[] originalList)
+		{
+			bool valid = Serializer.ValidateArray(originalList);
+			if (!valid)
+			{
+				Console.WriteLine($"Validation error for {originalList.GetType()} with serializer {Serializer.GetType()}");
+			}
+			return valid;
 		}
 	}
 }

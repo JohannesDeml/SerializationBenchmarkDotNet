@@ -20,6 +20,7 @@ namespace DotNetSerializationBenchmark
         public BenchmarkConfig()
         {
             Job baseConfig = Job.Default
+                .WithUnrollFactor(16)
                 .WithGcServer(true)
                 .WithGcForce(false);
             

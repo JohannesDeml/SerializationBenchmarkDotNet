@@ -18,7 +18,7 @@ namespace DotNetSerializationBenchmark
 		long BenchmarkSerialize<T>(T original);
 		long BenchmarkDeserialize<T>(T original);
 		bool Validate<T>(T original) where T : IEquatable<T>;
-		bool ValidateList<T, U>(T originalList) where T : IList<U>;
+		bool ValidateArray<T>(T[] array);
 		void Cleanup();
 	}
 }

@@ -59,16 +59,18 @@ namespace DotNetSerializationBenchmark
 				return Validate(original, (T) result);
 			}
 
+			Console.WriteLine($"Serialized result with type {typeof(T)} not found!");
 			return false;
 		}
 		
-		public bool ValidateList<T, U>(T originalList) where T : IList<U>
+		public bool ValidateArray<T>(T[] array)
 		{
-			if (deserializationResults.TryGetValue(typeof(T), out object result))
+			if (deserializationResults.TryGetValue(typeof(T[]), out var result))
 			{
-				return ValidateList<T, U>(originalList, (T) result);
+				return ValidateList(array, (IEnumerable<T>) result);
 			}
-
+			
+			Console.WriteLine($"Serialized result with type  {typeof(T[])} not found!");
 			return false;
 		}
 
@@ -80,7 +82,7 @@ namespace DotNetSerializationBenchmark
 			return EqualityComparer<T>.Default.Equals(original, copy);
 		}
 		
-		protected virtual bool ValidateList<T, U>(T originalList, T copyList) where T : IList<U>
+		protected virtual bool ValidateList<T>(IEnumerable<T> originalList, IEnumerable<T> copyList)
 		{
 			return originalList.SequenceEqual(copyList);
 		}
