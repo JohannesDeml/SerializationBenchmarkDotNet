@@ -19,10 +19,7 @@ namespace DotNetSerializationBenchmark
     {
         public BenchmarkConfig()
         {
-            Job baseConfig = Job.ShortRun
-                .WithIterationCount(10)
-                .WithWarmupCount(5)
-                .WithGcForce(true)
+            Job baseConfig = Job.Default
                 .WithGcServer(true)
                 .WithGcForce(false);
             
