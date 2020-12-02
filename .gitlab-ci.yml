@@ -23,7 +23,7 @@ benchmark_job:
     - dotnet build $BENCHMARK_PROJECT_PATH --configuration Release --no-restore --output $BENCHMARK_FOLDER
     
     # Run the benchmarks
-    - $BENCHMARK_FOLDER/BENCHMARK_NAME
+    - $BENCHMARK_FOLDER/$BENCHMARK_NAME
     
     # Store results on server
     - if [ ! -d $BENCHMARK_STORE_FOLDER ] ; then
