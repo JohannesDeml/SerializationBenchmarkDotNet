@@ -1,13 +1,12 @@
-# Built for Chunks Server
 # .NET CI for Shell runner supporting submodules
-# The script is composed of 4 stages: build, test, store and deploy.
+# Continuous integration for BenchmarkDotNet
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
   BENCHMARK_NAME: 'SerializationBenchmarkDotNet'
-  BENCHMARK_PROJECT_PATH: './SerializationBenchmarkDotNet/SerializationBenchmarkDotNet.csproj'
-  BENCHMARK_FOLDER: './bin/SerializationBenchmarkDotNet'
-  BENCHMARK_STORE_FOLDER: '/home/gitlab-runner/benchmarks/SerializationBenchmarkDotNet'
+  BENCHMARK_PROJECT_PATH: './$BENCHMARK_NAME/$BENCHMARK_NAME.csproj'
+  BENCHMARK_FOLDER: './bin/$BENCHMARK_NAME'
+  BENCHMARK_STORE_FOLDER: '/home/gitlab-runner/benchmarks/$BENCHMARK_NAME'
   
 stages:
   - benchmark
