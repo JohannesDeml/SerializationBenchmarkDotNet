@@ -14,7 +14,7 @@ using MessagePack;
 using MsgPack.Serialization;
 using ProtoBuf;
 
-namespace DotNetSerializationBenchmark
+namespace SerializationBenchmark
 {
 	[Serializable]
 	[ProtoContract]

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ProtobufNetTarget.cs">
+// <copyright file="NetSerializerTarget.cs">
 //   Copyright (c) 2020 Johannes Deml. All rights reserved.
 // </copyright>
 // <author>
@@ -8,16 +8,26 @@
 // </author>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
 using System.IO;
 
-namespace DotNetSerializationBenchmark
+namespace SerializationBenchmark
 {
-	internal class ProtobufNetTarget : ASerializerTarget<MemoryStream>
+	internal class NetSerializerTarget : ASerializerTarget<MemoryStream>
 	{
+		private NetSerializer.Serializer netSerializer;
+
+		public NetSerializerTarget(): base()
+		{
+			// This needs to be extended, if more types are added for testing
+			var rootTypes = new[] {typeof(Person[]), typeof(Vector3[])};
+			netSerializer = new NetSerializer.Serializer(rootTypes);
+		}
+		
 		protected override MemoryStream Serialize<T>(T original, out long messageSize)
 		{
 			var stream = new MemoryStream();
-			ProtoBuf.Serializer.Serialize<T>(stream, original);
+			netSerializer.SerializeDirect<T>(stream, original);
 			messageSize = stream.Position;
 			return stream;
 		}
@@ -26,7 +36,7 @@ namespace DotNetSerializationBenchmark
 		{
 			T copy = default(T);
 			stream.Position = 0;
-			copy = ProtoBuf.Serializer.Deserialize<T>(stream);
+			netSerializer.DeserializeDirect<T>(stream, out copy);
 			return copy;
 		}
 	}

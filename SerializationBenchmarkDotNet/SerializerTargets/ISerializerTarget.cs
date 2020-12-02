@@ -11,7 +11,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace DotNetSerializationBenchmark
+namespace SerializationBenchmark
 {
 	public interface ISerializerTarget
 	{

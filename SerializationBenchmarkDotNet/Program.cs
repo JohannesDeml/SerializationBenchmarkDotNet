@@ -11,7 +11,7 @@
 using System;
 using BenchmarkDotNet.Running;
 
-namespace DotNetSerializationBenchmark
+namespace SerializationBenchmark
 {
 	class Program
 	{

@@ -10,7 +10,7 @@
 
 using MessagePack;
 
-namespace DotNetSerializationBenchmark
+namespace SerializationBenchmark
 {
 	internal class Lz4MessagePackCSharpTarget : ASerializerTarget<byte[]>
 	{

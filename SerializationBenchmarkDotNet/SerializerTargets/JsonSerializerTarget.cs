@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="NetSerializerTarget.cs">
+// <copyright file="JsonSerializerTarget.cs">
 //   Copyright (c) 2020 Johannes Deml. All rights reserved.
 // </copyright>
 // <author>
@@ -8,26 +8,30 @@
 // </author>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System;
 using System.IO;
+using System.Text;
+using Newtonsoft.Json;
 
-namespace DotNetSerializationBenchmark
+namespace SerializationBenchmark
 {
-	internal class NetSerializerTarget : ASerializerTarget<MemoryStream>
+	internal class JsonSerializerTarget : ASerializerTarget<MemoryStream>
 	{
-		private NetSerializer.Serializer netSerializer;
+		private JsonSerializer jsonSerializer;
 
-		public NetSerializerTarget(): base()
+		public JsonSerializerTarget(): base()
 		{
-			// This needs to be extended, if more types are added for testing
-			var rootTypes = new[] {typeof(Person[]), typeof(Vector3[])};
-			netSerializer = new NetSerializer.Serializer(rootTypes);
+			jsonSerializer = new JsonSerializer();
 		}
-		
+
 		protected override MemoryStream Serialize<T>(T original, out long messageSize)
 		{
 			var stream = new MemoryStream();
-			netSerializer.SerializeDirect<T>(stream, original);
+			using (var tw = new StreamWriter(stream, Encoding.UTF8, 1024, true))
+			using (var jw = new JsonTextWriter(tw))
+			{
+				jsonSerializer.Serialize(jw, original);
+			}
+
 			messageSize = stream.Position;
 			return stream;
 		}
@@ -36,7 +40,11 @@ namespace DotNetSerializationBenchmark
 		{
 			T copy = default(T);
 			stream.Position = 0;
-			netSerializer.DeserializeDirect<T>(stream, out copy);
+			using (var tr = new StreamReader(stream, Encoding.UTF8, false, 1024, true))
+			using (var jr = new JsonTextReader(tr))
+			{
+				copy = jsonSerializer.Deserialize<T>(jr);
+			}
 			return copy;
 		}
 	}

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="JsonSerializerTarget.cs">
+// <copyright file="ProtobufNetTarget.cs">
 //   Copyright (c) 2020 Johannes Deml. All rights reserved.
 // </copyright>
 // <author>
@@ -9,29 +9,15 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System.IO;
-using System.Text;
-using Newtonsoft.Json;
 
-namespace DotNetSerializationBenchmark
+namespace SerializationBenchmark
 {
-	internal class JsonSerializerTarget : ASerializerTarget<MemoryStream>
+	internal class ProtobufNetTarget : ASerializerTarget<MemoryStream>
 	{
-		private JsonSerializer jsonSerializer;
-
-		public JsonSerializerTarget(): base()
-		{
-			jsonSerializer = new JsonSerializer();
-		}
-
 		protected override MemoryStream Serialize<T>(T original, out long messageSize)
 		{
 			var stream = new MemoryStream();
-			using (var tw = new StreamWriter(stream, Encoding.UTF8, 1024, true))
-			using (var jw = new JsonTextWriter(tw))
-			{
-				jsonSerializer.Serialize(jw, original);
-			}
-
+			ProtoBuf.Serializer.Serialize<T>(stream, original);
 			messageSize = stream.Position;
 			return stream;
 		}
@@ -40,11 +26,7 @@ namespace DotNetSerializationBenchmark
 		{
 			T copy = default(T);
 			stream.Position = 0;
-			using (var tr = new StreamReader(stream, Encoding.UTF8, false, 1024, true))
-			using (var jr = new JsonTextReader(tr))
-			{
-				copy = jsonSerializer.Deserialize<T>(jr);
-			}
+			copy = ProtoBuf.Serializer.Deserialize<T>(stream);
 			return copy;
 		}
 	}

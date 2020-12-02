@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BenchmarkDotNet.Attributes;
 
-namespace DotNetSerializationBenchmark
+namespace SerializationBenchmark
 {
 	[Config(typeof(BenchmarkConfig))]
 	public class Benchmark

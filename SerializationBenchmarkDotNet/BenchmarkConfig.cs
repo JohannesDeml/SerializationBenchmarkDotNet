@@ -13,7 +13,7 @@ using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Reports;
 using BenchmarkDotNet.Running;
 
-namespace DotNetSerializationBenchmark
+namespace SerializationBenchmark
 {
     public class BenchmarkConfig : ManualConfig
     {

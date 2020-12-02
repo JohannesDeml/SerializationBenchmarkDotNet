@@ -8,7 +8,7 @@
 // </author>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace DotNetSerializationBenchmark
+namespace SerializationBenchmark
 {
 	internal class MessagePackCSharpTarget : ASerializerTarget<byte[]>
 	{
