@@ -9,23 +9,30 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System.IO;
-using SerializationBenchmark;
 
-internal class ProtobufNetTarget : ASerializerTarget<MemoryStream>
+namespace SerializationBenchmark
 {
-	protected override MemoryStream Serialize<T>(T original, out long messageSize)
+	internal class ProtobufNetTarget : ASerializerTarget<MemoryStream>
 	{
-		var stream = new MemoryStream();
-		ProtoBuf.Serializer.Serialize<T>(stream, original);
-		messageSize = stream.Position;
-		return stream;
-	}
+		protected override MemoryStream Serialize<T>(T original, out long messageSize)
+		{
+			var stream = new MemoryStream();
+			ProtoBuf.Serializer.Serialize<T>(stream, original);
+			messageSize = stream.Position;
+			return stream;
+		}
 
-	protected override T Deserialize<T>(MemoryStream stream)
-	{
-		T copy = default(T);
-		stream.Position = 0;
-		copy = ProtoBuf.Serializer.Deserialize<T>(stream);
-		return copy;
+		protected override T Deserialize<T>(MemoryStream stream)
+		{
+			T copy = default(T);
+			stream.Position = 0;
+			copy = ProtoBuf.Serializer.Deserialize<T>(stream);
+			return copy;
+		}
+
+		public override string ToString()
+		{
+			return "ProtobufNet";
+		}
 	}
 }

@@ -31,15 +31,19 @@ namespace SerializationBenchmark
 			new ProtobufNetTarget(),
 		};
 
-		Person[] personArray;
-		Vector3[] vector3Array;
+		private Person person;
+		private Vector3 vector3;
+		private Person[] personArray;
+		private Vector3[] vector3Array;
 
 		[GlobalSetup]
 		public void PrepareBenchmark()
 		{
+			person = new Person {Age = 28, FirstName = "FirstName", LastName = "LastName", Sex = Sex.Female};
+			vector3 = new Vector3(12.345f, 987.654f, 1.3f);
 			personArray = Enumerable.Range(1, 1000).Select(x => new Person {Age = x % 128, FirstName = "FirstName", LastName = "LastName", Sex = Sex.Female})
 				.ToArray();
-			vector3Array = Enumerable.Range(1, 1000).Select(value => new Vector3 {x = 12345.12345f + value, y = 3994.35226f - value, z = 325125.52426f})
+			vector3Array = Enumerable.Range(1, 1000).Select(value => new Vector3 {x = 12345.12345f + value * 0.573f, y = 3994.35226f - value * 0.249f, z = 325125.52426f / (value * 2.571f)})
 				.ToArray();
 		}
 		
@@ -55,8 +59,8 @@ namespace SerializationBenchmark
 		public long Serialize()
 		{
 			var size = 0L;
-			size += Serializer.BenchmarkSerialize(personArray);
-			size += Serializer.BenchmarkSerialize(vector3Array);
+			size += Serializer.BenchmarkSerialize(person);
+			size += Serializer.BenchmarkSerialize(vector3);
 
 			return size;
 		}
@@ -65,8 +69,8 @@ namespace SerializationBenchmark
 		public long Deserialize()
 		{
 			var size = 0L;
-			size += Serializer.BenchmarkDeserialize(personArray);
-			size += Serializer.BenchmarkDeserialize(vector3Array);
+			size += Serializer.BenchmarkDeserialize(person);
+			size += Serializer.BenchmarkDeserialize(vector3);
 
 			return size;
 		}
@@ -74,8 +78,8 @@ namespace SerializationBenchmark
 		[IterationCleanup(Target = nameof(Deserialize))]
 		public void ValidateDeserialization()
 		{
-			ValidateArray(personArray);
-			ValidateArray(vector3Array);
+			Validate(person);
+			Validate(vector3);
 		}
 
 		[GlobalCleanup]
@@ -94,12 +98,12 @@ namespace SerializationBenchmark
 			return valid;
 		}
 
-		private bool ValidateArray<T>(T[] originalList)
+		private bool ValidateArray<T>(T[] originalArray)
 		{
-			bool valid = Serializer.ValidateArray(originalList);
+			bool valid = Serializer.ValidateArray(originalArray);
 			if (!valid)
 			{
-				Console.WriteLine($"Validation error for {originalList.GetType()} with serializer {Serializer.GetType()}");
+				Console.WriteLine($"Validation error for {originalArray.GetType()} with serializer {Serializer.GetType()}");
 			}
 			return valid;
 		}

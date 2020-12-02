@@ -8,19 +8,25 @@
 // </author>
 // --------------------------------------------------------------------------------------------------------------------
 
-using SerializationBenchmark;
-
-internal class MessagePackCSharpTarget : ASerializerTarget<byte[]>
+namespace SerializationBenchmark
 {
-	protected override byte[] Serialize<T>(T original, out long messageSize)
+	internal class MessagePackCSharpTarget : ASerializerTarget<byte[]>
 	{
-		var bytes = MessagePack.MessagePackSerializer.Serialize(original);
-		messageSize = bytes.Length;
-		return bytes;
-	}
+		protected override byte[] Serialize<T>(T original, out long messageSize)
+		{
+			var bytes = MessagePack.MessagePackSerializer.Serialize(original);
+			messageSize = bytes.Length;
+			return bytes;
+		}
 
-	protected override T Deserialize<T>(byte[] bytes)
-	{
-		return MessagePack.MessagePackSerializer.Deserialize<T>(bytes);
+		protected override T Deserialize<T>(byte[] bytes)
+		{
+			return MessagePack.MessagePackSerializer.Deserialize<T>(bytes);
+		}
+
+		public override string ToString()
+		{
+			return "MessagePackCSharp";
+		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿// Frok from https://github.com/neuecc/MessagePack-CSharp/blob/master/benchmark/SerializerBenchmark/BenchmarkConfig.cs
+﻿// Fork from https://github.com/neuecc/MessagePack-CSharp/blob/master/benchmark/SerializerBenchmark/BenchmarkConfig.cs
 // Copyright (c) All contributors. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
@@ -22,10 +22,12 @@ namespace SerializationBenchmark
         public BenchmarkConfig()
         {
             Job baseConfig = Job.Default
-                .RunOncePerIteration()
+                .WithUnrollFactor(8)
+                // Quick run through to check everything is working
+                //.RunOncePerIteration()
                 .WithGcServer(true)
                 .WithGcForce(false);
-            
+
             AddJob(baseConfig
                 .WithRuntime(CoreRuntime.Core31)
                 .WithPlatform(Platform.X64));
@@ -36,10 +38,9 @@ namespace SerializationBenchmark
 
             AddColumn(new DataSizeColumn());
             AddExporter(MarkdownExporter.GitHub);
-            //AddExporter(CsvExporter.Default);
-            var summaryStyle = new SummaryStyle(CultureInfo.InvariantCulture, false, SizeUnit.KB, TimeUnit.Microsecond, 
+            var processableStyle = new SummaryStyle(CultureInfo.InvariantCulture, false, SizeUnit.KB, TimeUnit.Microsecond, 
                 false, true, 100);
-            AddExporter(new CsvExporter(CsvSeparator.Comma, summaryStyle));
+            AddExporter(new CsvExporter(CsvSeparator.Comma, processableStyle));
             AddDiagnoser(MemoryDiagnoser.Default);
         }
 
