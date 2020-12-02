@@ -11,41 +11,41 @@
 using System.IO;
 using System.Text;
 using Newtonsoft.Json;
+using SerializationBenchmark;
 
-namespace SerializationBenchmark
+
+
+internal class JsonSerializerTarget : ASerializerTarget<MemoryStream>
 {
-	internal class JsonSerializerTarget : ASerializerTarget<MemoryStream>
+	private JsonSerializer jsonSerializer;
+
+	public JsonSerializerTarget(): base()
 	{
-		private JsonSerializer jsonSerializer;
+		jsonSerializer = new JsonSerializer();
+	}
 
-		public JsonSerializerTarget(): base()
+	protected override MemoryStream Serialize<T>(T original, out long messageSize)
+	{
+		var stream = new MemoryStream();
+		using (var tw = new StreamWriter(stream, Encoding.UTF8, 1024, true))
+		using (var jw = new JsonTextWriter(tw))
 		{
-			jsonSerializer = new JsonSerializer();
+			jsonSerializer.Serialize(jw, original);
 		}
 
-		protected override MemoryStream Serialize<T>(T original, out long messageSize)
-		{
-			var stream = new MemoryStream();
-			using (var tw = new StreamWriter(stream, Encoding.UTF8, 1024, true))
-			using (var jw = new JsonTextWriter(tw))
-			{
-				jsonSerializer.Serialize(jw, original);
-			}
+		messageSize = stream.Position;
+		return stream;
+	}
 
-			messageSize = stream.Position;
-			return stream;
-		}
-
-		protected override T Deserialize<T>(MemoryStream stream)
+	protected override T Deserialize<T>(MemoryStream stream)
+	{
+		T copy = default(T);
+		stream.Position = 0;
+		using (var tr = new StreamReader(stream, Encoding.UTF8, false, 1024, true))
+		using (var jr = new JsonTextReader(tr))
 		{
-			T copy = default(T);
-			stream.Position = 0;
-			using (var tr = new StreamReader(stream, Encoding.UTF8, false, 1024, true))
-			using (var jr = new JsonTextReader(tr))
-			{
-				copy = jsonSerializer.Deserialize<T>(jr);
-			}
-			return copy;
+			copy = jsonSerializer.Deserialize<T>(jr);
 		}
+		return copy;
 	}
 }

@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using System;
+using System.Globalization;
 using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Diagnosers;
@@ -12,6 +13,7 @@ using BenchmarkDotNet.Exporters.Csv;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Reports;
 using BenchmarkDotNet.Running;
+using Perfolizer.Horology;
 
 namespace SerializationBenchmark
 {
@@ -20,7 +22,7 @@ namespace SerializationBenchmark
         public BenchmarkConfig()
         {
             Job baseConfig = Job.Default
-                .WithUnrollFactor(16)
+                .RunOncePerIteration()
                 .WithGcServer(true)
                 .WithGcForce(false);
             
@@ -34,7 +36,10 @@ namespace SerializationBenchmark
 
             AddColumn(new DataSizeColumn());
             AddExporter(MarkdownExporter.GitHub);
-            AddExporter(CsvExporter.Default);
+            //AddExporter(CsvExporter.Default);
+            var summaryStyle = new SummaryStyle(CultureInfo.InvariantCulture, false, SizeUnit.KB, TimeUnit.Microsecond, 
+                false, true, 100);
+            AddExporter(new CsvExporter(CsvSeparator.Comma, summaryStyle));
             AddDiagnoser(MemoryDiagnoser.Default);
         }
 
