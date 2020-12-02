@@ -14,24 +14,12 @@ using System.Linq;
 
 namespace DotNetSerializationBenchmark
 {
-	public class SerializationResult<T>
+	public class SerializationResult<TSerialization>
 	{
-		public T Result;
+		public TSerialization Result;
 		public long ByteSize;
 
-		public SerializationResult(T result, long byteSize)
-		{
-			Result = result;
-			ByteSize = byteSize;
-		}
-	}
-	
-	public class DeserializationResult
-	{
-		public object Result;
-		public long ByteSize;
-
-		public DeserializationResult(object result, long byteSize)
+		public SerializationResult(TSerialization result, long byteSize)
 		{
 			Result = result;
 			ByteSize = byteSize;
@@ -41,11 +29,11 @@ namespace DotNetSerializationBenchmark
 	public abstract class ASerializerTarget<TSerialization>: ISerializerTarget
 	{
 		private Dictionary<Type, SerializationResult<TSerialization>> serializationResults;
-		private Dictionary<Type, DeserializationResult> deserializationResults;
+		private Dictionary<Type, object> deserializationResults;
 		protected ASerializerTarget()
 		{
 			serializationResults = new Dictionary<Type, SerializationResult<TSerialization>>();
-			deserializationResults = new Dictionary<Type, DeserializationResult>();
+			deserializationResults = new Dictionary<Type, object>();
 		}
 
 		public long BenchmarkSerialize<T>(T original)
@@ -59,16 +47,16 @@ namespace DotNetSerializationBenchmark
 		{
 			var target = serializationResults[typeof(T)];
 			var copy = Deserialize<T>(target.Result);
-			deserializationResults[typeof(T)] = new DeserializationResult(copy, target.ByteSize);
+			deserializationResults[typeof(T)] = copy;
 
 			return target.ByteSize;
 		}
 
 		public bool Validate<T>(T original) where T : IEquatable<T>
 		{
-			if (deserializationResults.TryGetValue(typeof(T), out DeserializationResult result))
+			if (deserializationResults.TryGetValue(typeof(T), out object result))
 			{
-				return Validate(original, (T) result.Result);
+				return Validate(original, (T) result);
 			}
 
 			return false;
@@ -76,9 +64,9 @@ namespace DotNetSerializationBenchmark
 		
 		public bool ValidateList<T, U>(T originalList) where T : IList<U>
 		{
-			if (deserializationResults.TryGetValue(typeof(T), out DeserializationResult result))
+			if (deserializationResults.TryGetValue(typeof(T), out object result))
 			{
-				return ValidateList<T, U>(originalList, (T) result.Result);
+				return ValidateList<T, U>(originalList, (T) result);
 			}
 
 			return false;
