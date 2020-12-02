@@ -1,0 +1,38 @@
+# Built for Chunks Server
+# .NET CI for Shell runner supporting submodules
+# The script is composed of 4 stages: build, test, store and deploy.
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  BENCHMARK_NAME: 'SerializationBenchmarkDotNet'
+  BENCHMARK_PROJECT_PATH: './SerializationBenchmarkDotNet/SerializationBenchmarkDotNet.csproj'
+  BENCHMARK_FOLDER: './bin/SerializationBenchmarkDotNet'
+  BENCHMARK_STORE_FOLDER: '/home/gitlab-runner/benchmarks/SerializationBenchmarkDotNet'
+  
+stages:
+  - benchmark
+
+# Only run for benchmark branch
+benchmark_job:
+  stage: benchmark
+  only:
+    - benchmark
+  script:
+    # Build Chunks.Benchmarks
+    - dotnet restore $BENCHMARK_PROJECT_PATH
+    - dotnet build $BENCHMARK_PROJECT_PATH --configuration Release --no-restore --output $BENCHMARK_FOLDER
+    
+    # Run the benchmarks
+    - $BENCHMARK_FOLDER/BENCHMARK_NAME
+    
+    # Store results on server
+    - if [ ! -d $BENCHMARK_STORE_FOLDER ] ; then
+    - mkdir $BENCHMARK_STORE_FOLDER
+    - fi
+    - datetime_string=$(date +'%Y-%m-%d--%H-%M')
+    - targetfolder=$BENCHMARK_STORE_FOLDER/${datetime_string}--$CI_COMMIT_SHORT_SHA
+    - mkdir ${targetfolder}
+    - cp -R ./BenchmarkDotNet.Artifacts/* ${targetfolder}/
+  artifacts:
+    paths:
+      - ./BenchmarkDotNet.Artifacts
