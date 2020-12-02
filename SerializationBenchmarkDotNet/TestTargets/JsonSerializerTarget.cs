@@ -14,9 +14,8 @@ using Newtonsoft.Json;
 
 namespace DotNetSerializationBenchmark
 {
-	internal class JsonSerializerTarget : ASerializerTarget
+	internal class JsonSerializerTarget : ASerializerTarget<MemoryStream>
 	{
-		MemoryStream stream = null;
 		private JsonSerializer jsonSerializer;
 
 		public JsonSerializerTarget(): base()
@@ -26,21 +25,22 @@ namespace DotNetSerializationBenchmark
 
 		public override void Cleanup()
 		{
-			stream = null;
 		}
 
-		protected override long Serialize<T>(T original)
+		protected override MemoryStream Serialize<T>(T original, out long messageSize)
 		{
-			stream = new MemoryStream();
+			var stream = new MemoryStream();
 			using (var tw = new StreamWriter(stream, Encoding.UTF8, 1024, true))
 			using (var jw = new JsonTextWriter(tw))
 			{
 				jsonSerializer.Serialize(jw, original);
 			}
-			return stream.Position;
+
+			messageSize = stream.Position;
+			return stream;
 		}
 
-		protected override T Deserialize<T>()
+		protected override T Deserialize<T>(MemoryStream stream)
 		{
 			T copy = default(T);
 			stream.Position = 0;

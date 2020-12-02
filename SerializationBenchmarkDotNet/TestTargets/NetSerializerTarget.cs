@@ -13,9 +13,8 @@ using System.IO;
 
 namespace DotNetSerializationBenchmark
 {
-	internal class NetSerializerTarget : ASerializerTarget
+	internal class NetSerializerTarget : ASerializerTarget<MemoryStream>
 	{
-		MemoryStream stream = null;
 		private NetSerializer.Serializer netSerializer;
 
 		public NetSerializerTarget(): base()
@@ -27,16 +26,17 @@ namespace DotNetSerializationBenchmark
 
 		public override void Cleanup()
 		{
-			stream = null;
 		}
 
-		protected override long Serialize<T>(T original)
+		protected override MemoryStream Serialize<T>(T original, out long messageSize)
 		{
-			netSerializer.SerializeDirect<T>(stream = new MemoryStream(), original);
-			return stream.Position;
+			var stream = new MemoryStream();
+			netSerializer.SerializeDirect<T>(stream, original);
+			messageSize = stream.Position;
+			return stream;
 		}
 
-		protected override T Deserialize<T>()
+		protected override T Deserialize<T>(MemoryStream stream)
 		{
 			T copy = default(T);
 			stream.Position = 0;

@@ -12,9 +12,8 @@ using MessagePack;
 
 namespace DotNetSerializationBenchmark
 {
-	internal class Lz4MessagePackCSharpTarget : ASerializerTarget
+	internal class Lz4MessagePackCSharpTarget : ASerializerTarget<byte[]>
 	{
-		byte[] bytes;
 		MessagePackSerializerOptions lz4Options;
 
 		public Lz4MessagePackCSharpTarget(): base()
@@ -24,16 +23,16 @@ namespace DotNetSerializationBenchmark
 
 		public override void Cleanup()
 		{
-			bytes = null;
 		}
 
-		protected override long Serialize<T>(T original)
+		protected override byte[] Serialize<T>(T original, out long messageSize)
 		{
-			bytes = MessagePack.MessagePackSerializer.Serialize(original, lz4Options);
-			return bytes.Length;
+			var bytes = MessagePack.MessagePackSerializer.Serialize(original, lz4Options);
+			messageSize = bytes.Length;
+			return bytes;
 		}
 
-		protected override T Deserialize<T>()
+		protected override T Deserialize<T>(byte[] bytes)
 		{
 			return MessagePack.MessagePackSerializer.Deserialize<T>(bytes, lz4Options);
 		}

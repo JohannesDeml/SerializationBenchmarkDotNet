@@ -20,9 +20,9 @@ namespace DotNetSerializationBenchmark
 	public class Benchmark
 	{
 		[ParamsSource(nameof(Serializers))]
-		public ASerializerTarget Serializer;
+		public ISerializerTarget Serializer;
 
-		public IEnumerable<ASerializerTarget> Serializers => new ASerializerTarget[]
+		public IEnumerable<ISerializerTarget> Serializers => new ISerializerTarget[]
 		{
 			new MessagePackCSharpTarget(),
 			new Lz4MessagePackCSharpTarget(),
@@ -43,18 +43,36 @@ namespace DotNetSerializationBenchmark
 			vector3Array = Enumerable.Range(1, 1000).Select(value => new Vector3 {x = 12345.12345f + value, y = 3994.35226f - value, z = 325125.52426f})
 				.ToArray();
 		}
+		
+		[GlobalSetup(Target = nameof(Deserialize))]
+		public void PrepareDeserializeBenchmark()
+		{
+			PrepareBenchmark();
+			// Call serialize once for the current Serializer, so there is something to deserialize
+			Serialize();
+		}
 
 		[Benchmark]
 		public long Serialize()
 		{
 			var size = 0L;
-			size += Serializer.Run(personArray);
-			size += Serializer.Run(vector3Array);
+			size += Serializer.BenchmarkSerialize(personArray);
+			size += Serializer.BenchmarkSerialize(vector3Array);
+
+			return size;
+		}
+		
+		[Benchmark]
+		public long Deserialize()
+		{
+			var size = 0L;
+			size += Serializer.BenchmarkDeserialize(personArray);
+			size += Serializer.BenchmarkDeserialize(vector3Array);
 
 			return size;
 		}
 
-		[IterationCleanup]
+		[IterationCleanup(Target = nameof(Deserialize))]
 		public void ValidateAndCleanupIteration()
 		{
 			if (!Serializer.ValidateList<Person[], Person>(personArray))
@@ -66,6 +84,12 @@ namespace DotNetSerializationBenchmark
 			{
 				Console.WriteLine($"Validation error for {nameof(vector3Array)} for target {Serializer.GetType()}");
 			}
+		}
+
+		[GlobalCleanup]
+		public void GlobalCleanup()
+		{
+			Serializer.Cleanup();
 		}
 	}
 }

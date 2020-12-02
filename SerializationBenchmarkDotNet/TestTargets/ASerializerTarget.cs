@@ -14,39 +14,68 @@ using System.Linq;
 
 namespace DotNetSerializationBenchmark
 {
-	public class TestResult
+	public class SerializationResult<T>
+	{
+		public T Result;
+		public long ByteSize;
+
+		public SerializationResult(T result, long byteSize)
+		{
+			Result = result;
+			ByteSize = byteSize;
+		}
+	}
+	
+	public class DeserializationResult
 	{
 		public object Result;
 		public long ByteSize;
 
-		public TestResult(object result, long byteSize)
+		public DeserializationResult(object result, long byteSize)
 		{
 			Result = result;
 			ByteSize = byteSize;
 		}
 	}
 
-	public abstract class ASerializerTarget
+	public interface ISerializerTarget
 	{
-		private Dictionary<Type, TestResult> results;
+		long BenchmarkSerialize<T>(T original);
+		long BenchmarkDeserialize<T>(T original);
+		bool Validate<T>(T original) where T : IEquatable<T>;
+		bool ValidateList<T, U>(T originalList) where T : IList<U>;
+		void Cleanup();
+	}
+	
+	public abstract class ASerializerTarget<TSerialization>: ISerializerTarget
+	{
+		private Dictionary<Type, SerializationResult<TSerialization>> serializationResults;
+		private Dictionary<Type, DeserializationResult> deserializationResults;
 		protected ASerializerTarget()
 		{
-			results = new Dictionary<Type, TestResult>();
+			serializationResults = new Dictionary<Type, SerializationResult<TSerialization>>();
+			deserializationResults = new Dictionary<Type, DeserializationResult>();
 		}
 
-		public long Run<T>(T original)
+		public long BenchmarkSerialize<T>(T original)
 		{
-			var messageSize = Serialize(original);
-
-			var copy = Deserialize<T>();
-			results[typeof(T)] = new TestResult(copy, messageSize);
-
+			var result = Serialize(original, out long messageSize);
+			serializationResults[typeof(T)] = new SerializationResult<TSerialization>(result, messageSize);
 			return messageSize;
+		}
+
+		public long BenchmarkDeserialize<T>(T original)
+		{
+			var target = serializationResults[typeof(T)];
+			var copy = Deserialize<T>(target.Result);
+			deserializationResults[typeof(T)] = new DeserializationResult(copy, target.ByteSize);
+
+			return target.ByteSize;
 		}
 
 		public bool Validate<T>(T original) where T : IEquatable<T>
 		{
-			if (results.TryGetValue(typeof(T), out TestResult result))
+			if (deserializationResults.TryGetValue(typeof(T), out DeserializationResult result))
 			{
 				return Validate(original, (T) result.Result);
 			}
@@ -56,7 +85,7 @@ namespace DotNetSerializationBenchmark
 		
 		public bool ValidateList<T, U>(T originalList) where T : IList<U>
 		{
-			if (results.TryGetValue(typeof(T), out TestResult result))
+			if (deserializationResults.TryGetValue(typeof(T), out DeserializationResult result))
 			{
 				return ValidateList<T, U>(originalList, (T) result.Result);
 			}
@@ -66,8 +95,8 @@ namespace DotNetSerializationBenchmark
 
 		public abstract void Cleanup();
 			
-		protected abstract long Serialize<T>(T original);
-		protected abstract T Deserialize<T>();
+		protected abstract TSerialization Serialize<T>(T original, out long messageSize);
+		protected abstract T Deserialize<T>(TSerialization serializedObject);
 
 		protected virtual bool Validate<T>(T original, T copy) where T : IEquatable<T>
 		{

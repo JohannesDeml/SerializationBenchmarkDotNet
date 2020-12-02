@@ -10,21 +10,20 @@
 
 namespace DotNetSerializationBenchmark
 {
-	internal class MessagePackCSharpTarget : ASerializerTarget
+	internal class MessagePackCSharpTarget : ASerializerTarget<byte[]>
 	{
-		byte[] bytes;
 		public override void Cleanup()
 		{
-			bytes = null;
 		}
 
-		protected override long Serialize<T>(T original)
+		protected override byte[] Serialize<T>(T original, out long messageSize)
 		{
-			bytes = MessagePack.MessagePackSerializer.Serialize(original);
-			return bytes.Length;
+			var bytes = MessagePack.MessagePackSerializer.Serialize(original);
+			messageSize = bytes.Length;
+			return bytes;
 		}
 
-		protected override T Deserialize<T>()
+		protected override T Deserialize<T>(byte[] bytes)
 		{
 			return MessagePack.MessagePackSerializer.Deserialize<T>(bytes);
 		}
