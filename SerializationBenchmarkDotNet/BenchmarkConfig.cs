@@ -19,19 +19,25 @@ namespace DotNetSerializationBenchmark
     {
         public BenchmarkConfig()
         {
-            // run quickly:)
-            Job baseConfig = Job.ShortRun.WithIterationCount(1).WithWarmupCount(1);
-
-            // Mimic server setup
-            baseConfig.WithGcServer(true).WithGcForce(false);
+            Job baseConfig = Job.ShortRun
+                .WithIterationCount(10)
+                .WithWarmupCount(5)
+                .WithGcForce(true)
+                .WithGcServer(true)
+                .WithGcForce(false);
             
-            this.Add(baseConfig.With(CoreRuntime.Core31).With(Jit.RyuJit).With(Platform.X64));
+            AddJob(baseConfig
+                .WithRuntime(CoreRuntime.Core31)
+                .WithPlatform(Platform.X64));
+            
+            AddJob(baseConfig
+                .WithRuntime(CoreRuntime.Core50)
+                .WithPlatform(Platform.X64));
 
-            this.Add(MarkdownExporter.GitHub);
-            this.Add(CsvExporter.Default);
-            this.Add(MemoryDiagnoser.Default);
-
-            this.Add(new DataSizeColumn());
+            AddColumn(new DataSizeColumn());
+            AddExporter(MarkdownExporter.GitHub);
+            AddExporter(CsvExporter.Default);
+            AddDiagnoser(MemoryDiagnoser.Default);
         }
 
         public class DataSizeColumn : IColumn
