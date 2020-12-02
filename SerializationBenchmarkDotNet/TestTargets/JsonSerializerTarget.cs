@@ -23,10 +23,6 @@ namespace DotNetSerializationBenchmark
 			jsonSerializer = new JsonSerializer();
 		}
 
-		public override void Cleanup()
-		{
-		}
-
 		protected override MemoryStream Serialize<T>(T original, out long messageSize)
 		{
 			var stream = new MemoryStream();

@@ -38,15 +38,6 @@ namespace DotNetSerializationBenchmark
 		}
 	}
 
-	public interface ISerializerTarget
-	{
-		long BenchmarkSerialize<T>(T original);
-		long BenchmarkDeserialize<T>(T original);
-		bool Validate<T>(T original) where T : IEquatable<T>;
-		bool ValidateList<T, U>(T originalList) where T : IList<U>;
-		void Cleanup();
-	}
-	
 	public abstract class ASerializerTarget<TSerialization>: ISerializerTarget
 	{
 		private Dictionary<Type, SerializationResult<TSerialization>> serializationResults;
@@ -93,8 +84,6 @@ namespace DotNetSerializationBenchmark
 			return false;
 		}
 
-		public abstract void Cleanup();
-			
 		protected abstract TSerialization Serialize<T>(T original, out long messageSize);
 		protected abstract T Deserialize<T>(TSerialization serializedObject);
 
@@ -106,6 +95,12 @@ namespace DotNetSerializationBenchmark
 		protected virtual bool ValidateList<T, U>(T originalList, T copyList) where T : IList<U>
 		{
 			return originalList.SequenceEqual(copyList);
+		}
+
+		public virtual void Cleanup()
+		{
+			serializationResults.Clear();
+			deserializationResults.Clear();
 		}
 	}
 }

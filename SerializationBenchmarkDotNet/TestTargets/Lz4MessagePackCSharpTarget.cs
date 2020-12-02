@@ -21,10 +21,6 @@ namespace DotNetSerializationBenchmark
 			lz4Options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
 		}
 
-		public override void Cleanup()
-		{
-		}
-
 		protected override byte[] Serialize<T>(T original, out long messageSize)
 		{
 			var bytes = MessagePack.MessagePackSerializer.Serialize(original, lz4Options);

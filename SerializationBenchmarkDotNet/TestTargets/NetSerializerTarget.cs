@@ -23,11 +23,7 @@ namespace DotNetSerializationBenchmark
 			var rootTypes = new[] {typeof(Person[]), typeof(Vector3[])};
 			netSerializer = new NetSerializer.Serializer(rootTypes);
 		}
-
-		public override void Cleanup()
-		{
-		}
-
+		
 		protected override MemoryStream Serialize<T>(T original, out long messageSize)
 		{
 			var stream = new MemoryStream();

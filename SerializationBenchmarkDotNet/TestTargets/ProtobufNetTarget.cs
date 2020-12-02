@@ -14,10 +14,6 @@ namespace DotNetSerializationBenchmark
 {
 	internal class ProtobufNetTarget : ASerializerTarget<MemoryStream>
 	{
-		public override void Cleanup()
-		{
-		}
-		
 		protected override MemoryStream Serialize<T>(T original, out long messageSize)
 		{
 			var stream = new MemoryStream();
