@@ -2,8 +2,8 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>DotNetSerializationBenchmark</RootNamespace>
+        <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
     </PropertyGroup>
 
     <ItemGroup>
