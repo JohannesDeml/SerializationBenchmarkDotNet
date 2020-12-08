@@ -26,11 +26,11 @@ namespace SerializationBenchmark
 		}
 	}
 
-	public abstract class ASerializerTarget<TSerialization>: ISerializerTarget
+	public abstract class ASerializer<TSerialization>: ISerializer
 	{
 		private Dictionary<Type, SerializationResult<TSerialization>> serializationResults;
 		private Dictionary<Type, object> deserializationResults;
-		protected ASerializerTarget()
+		protected ASerializer()
 		{
 			serializationResults = new Dictionary<Type, SerializationResult<TSerialization>>();
 			deserializationResults = new Dictionary<Type, object>();

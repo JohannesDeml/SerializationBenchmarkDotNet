@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace SerializationBenchmark
 {
-	public interface ISerializerTarget
+	public interface ISerializer
 	{
 		long BenchmarkSerialize<T>(T original);
 		long BenchmarkDeserialize<T>(T original);

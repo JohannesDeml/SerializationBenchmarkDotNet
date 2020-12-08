@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Lz4MessagePackCSharpTarget.cs">
+// <copyright file="MsgPackTarget.cs">
 //   Copyright (c) 2020 Johannes Deml. All rights reserved.
 // </copyright>
 // <author>
@@ -8,34 +8,25 @@
 // </author>
 // --------------------------------------------------------------------------------------------------------------------
 
-using MessagePack;
-
 namespace SerializationBenchmark
 {
-	internal class Lz4MessagePackCSharpTarget : ASerializerTarget<byte[]>
+	internal class MsgPack : ASerializer<byte[]>
 	{
-		MessagePackSerializerOptions lz4Options;
-
-		public Lz4MessagePackCSharpTarget() : base()
-		{
-			lz4Options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
-		}
-
 		protected override byte[] Serialize<T>(T original, out long messageSize)
 		{
-			var bytes = MessagePack.MessagePackSerializer.Serialize(original, lz4Options);
+			var bytes = global::MsgPack.Serialization.MessagePackSerializer.Get<T>().PackSingleObject(original);
 			messageSize = bytes.Length;
 			return bytes;
 		}
 
 		protected override T Deserialize<T>(byte[] bytes)
 		{
-			return MessagePack.MessagePackSerializer.Deserialize<T>(bytes, lz4Options);
+			return global::MsgPack.Serialization.MessagePackSerializer.Get<T>().UnpackSingleObject(bytes);
 		}
 
 		public override string ToString()
 		{
-			return "Lz4MessagePackCSharp";
+			return "MsgPack";
 		}
 	}
 }

@@ -10,7 +10,7 @@
 
 namespace SerializationBenchmark
 {
-	internal class MessagePackCSharpTarget : ASerializerTarget<byte[]>
+	internal class MessagePackCSharp : ASerializer<byte[]>
 	{
 		protected override byte[] Serialize<T>(T original, out long messageSize)
 		{

@@ -19,16 +19,16 @@ namespace SerializationBenchmark
 	public class Benchmark
 	{
 		[ParamsSource(nameof(Serializers))]
-		public ISerializerTarget Serializer;
+		public ISerializer Serializer;
 
-		public IEnumerable<ISerializerTarget> Serializers => new ISerializerTarget[]
+		public IEnumerable<ISerializer> Serializers => new ISerializer[]
 		{
-			new MessagePackCSharpTarget(),
-			new Lz4MessagePackCSharpTarget(),
-			new NetSerializerTarget(),
-			new MsgPackTarget(),
-			new JsonSerializerTarget(),
-			new ProtobufNetTarget(),
+			new MessagePackCSharp(),
+			new Lz4MessagePackCSharp(),
+			new NetSerializer(),
+			new MsgPack(),
+			new JsonSerializer(),
+			new ProtobufNet(),
 		};
 
 		private Person person;

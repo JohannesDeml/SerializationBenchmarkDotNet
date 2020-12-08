@@ -12,15 +12,15 @@ using System.IO;
 
 namespace SerializationBenchmark
 {
-	internal class NetSerializerTarget : ASerializerTarget<MemoryStream>
+	internal class NetSerializer : ASerializer<MemoryStream>
 	{
-		private NetSerializer.Serializer netSerializer;
+		private global::NetSerializer.Serializer netSerializer;
 
-		public NetSerializerTarget() : base()
+		public NetSerializer() : base()
 		{
 			// This needs to be extended, if more types are added for testing
-			var rootTypes = new[] {typeof(Person[]), typeof(Vector3[])};
-			netSerializer = new NetSerializer.Serializer(rootTypes);
+			var rootTypes = new[] {typeof(Person), typeof(Vector3)};
+			netSerializer = new global::NetSerializer.Serializer(rootTypes);
 		}
 
 		protected override MemoryStream Serialize<T>(T original, out long messageSize)
