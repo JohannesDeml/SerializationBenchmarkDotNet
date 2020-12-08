@@ -38,7 +38,7 @@ namespace SerializationBenchmark
 
             AddColumn(new DataSizeColumn());
             AddExporter(MarkdownExporter.GitHub);
-            var processableStyle = new SummaryStyle(CultureInfo.InvariantCulture, false, SizeUnit.KB, TimeUnit.Microsecond, 
+            var processableStyle = new SummaryStyle(CultureInfo.InvariantCulture, false, SizeUnit.KB, TimeUnit.Nanosecond, 
                 false, true, 100);
             AddExporter(new CsvExporter(CsvSeparator.Comma, processableStyle));
             AddDiagnoser(MemoryDiagnoser.Default);

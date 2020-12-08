@@ -39,7 +39,7 @@ namespace SerializationBenchmark
 		[ParamsSource(nameof(Targets))]
 		public ISerializationTarget Target;
 
-		private int loops = 100;
+		private int loops = 1;
 		
 		public IEnumerable<ISerializer> Serializers => new ISerializer[]
 		{
