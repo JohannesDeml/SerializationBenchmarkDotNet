@@ -24,13 +24,13 @@ namespace SerializationBenchmark
             Job baseConfig = Job.Default
                 .WithUnrollFactor(8)
                 // Quick run through to check everything is working
-                .RunOncePerIteration()
+                // .RunOncePerIteration()
                 .WithGcServer(true)
                 .WithGcForce(false);
 
-            // AddJob(baseConfig
-            //     .WithRuntime(CoreRuntime.Core31)
-            //     .WithPlatform(Platform.X64));
+            AddJob(baseConfig
+                .WithRuntime(CoreRuntime.Core31)
+                .WithPlatform(Platform.X64));
             
             AddJob(baseConfig
                 .WithRuntime(CoreRuntime.Core50)

@@ -72,7 +72,10 @@ namespace SerializationBenchmark
 		public long Serialize()
 		{
 			var size = 0L;
-			size += Serializer.BenchmarkSerialize(Target.GetType(), Target);
+			for (int i = 0; i < 100; i++)
+			{
+				size += Serializer.BenchmarkSerialize(Target.GetType(), Target);
+			}
 
 			return size;
 		}
@@ -81,7 +84,11 @@ namespace SerializationBenchmark
 		public long Deserialize()
 		{
 			var size = 0L;
-			size += Serializer.BenchmarkDeserialize(Target.GetType(), Target);
+
+			for (int i = 0; i < 100; i++)
+			{
+				size += Serializer.BenchmarkDeserialize(Target.GetType(), Target);
+			}
 
 			return size;
 		}
