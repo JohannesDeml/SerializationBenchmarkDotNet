@@ -20,7 +20,7 @@ namespace SerializationBenchmark
 	[ProtoContract]
 	[DataContract]
 	[MessagePackObject]
-	public struct Vector3 : IEquatable<Vector3>
+	public struct Vector3 : IEquatable<Vector3>, ISerializationTarget
 	{
 		[MessagePackMember(0)]
 		[Key(0)]
@@ -60,6 +60,11 @@ namespace SerializationBenchmark
 		public override int GetHashCode()
 		{
 			return HashCode.Combine(x, y, z);
+		}
+		
+		public override string ToString()
+		{
+			return "Vector3";
 		}
 	}
 }

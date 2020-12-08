@@ -8,25 +8,26 @@
 // </author>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
 using System.IO;
 
 namespace SerializationBenchmark
 {
 	internal class ProtobufNet : ASerializer<MemoryStream>
 	{
-		protected override MemoryStream Serialize<T>(T original, out long messageSize)
+		protected override MemoryStream Serialize(Type type, object original, out long messageSize)
 		{
 			var stream = new MemoryStream();
-			ProtoBuf.Serializer.Serialize<T>(stream, original);
+			ProtoBuf.Serializer.Serialize(stream, original);
 			messageSize = stream.Position;
 			return stream;
 		}
 
-		protected override T Deserialize<T>(MemoryStream stream)
+		protected override object Deserialize(Type type, MemoryStream stream)
 		{
-			T copy = default(T);
+			object copy;
 			stream.Position = 0;
-			copy = ProtoBuf.Serializer.Deserialize<T>(stream);
+			copy = ProtoBuf.Serializer.Deserialize(type, stream);
 			return copy;
 		}
 

@@ -27,7 +27,7 @@ namespace SerializationBenchmark
 	[ProtoContract]
 	[DataContract]
 	[MessagePackObject]
-	public class Person : IEquatable<Person>
+	public class Person : IEquatable<Person>, ISerializationTarget
 	{
 		[MessagePackMember(0)]
 		[Key(0)]
@@ -56,6 +56,11 @@ namespace SerializationBenchmark
 		public bool Equals(Person other)
 		{
 			return other != null && Age == other.Age && FirstName == other.FirstName && LastName == other.LastName && Sex == other.Sex;
+		}
+
+		public override string ToString()
+		{
+			return "Person";
 		}
 	}
 }

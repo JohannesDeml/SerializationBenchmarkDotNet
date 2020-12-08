@@ -8,7 +8,10 @@
 // </author>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace SerializationBenchmark
 {
@@ -18,24 +21,28 @@ namespace SerializationBenchmark
 
 		public NetSerializer() : base()
 		{
-			// This needs to be extended, if more types are added for testing
-			var rootTypes = new[] {typeof(Person), typeof(Vector3)};
+			var rootTypes = GetSubclasses(typeof(ISerializationTarget));
 			netSerializer = new global::NetSerializer.Serializer(rootTypes);
 		}
+		
+		IEnumerable<Type> GetSubclasses(Type type)
+		{
+			return type.Assembly.GetTypes().Where(t => type.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+		}
 
-		protected override MemoryStream Serialize<T>(T original, out long messageSize)
+		protected override MemoryStream Serialize(Type type, object original, out long messageSize)
 		{
 			var stream = new MemoryStream();
-			netSerializer.SerializeDirect<T>(stream, original);
+			netSerializer.SerializeDirect(stream, original);
 			messageSize = stream.Position;
 			return stream;
 		}
 
-		protected override T Deserialize<T>(MemoryStream stream)
+		protected override object Deserialize(Type type, MemoryStream stream)
 		{
-			T copy = default(T);
+			object copy;
 			stream.Position = 0;
-			netSerializer.DeserializeDirect<T>(stream, out copy);
+			netSerializer.DeserializeDirect(stream, out copy);
 			return copy;
 		}
 

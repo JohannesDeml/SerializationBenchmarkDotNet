@@ -8,20 +8,22 @@
 // </author>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
+
 namespace SerializationBenchmark
 {
 	internal class MsgPack : ASerializer<byte[]>
 	{
-		protected override byte[] Serialize<T>(T original, out long messageSize)
+		protected override byte[] Serialize(Type type, object original, out long messageSize)
 		{
-			var bytes = global::MsgPack.Serialization.MessagePackSerializer.Get<T>().PackSingleObject(original);
+			var bytes = global::MsgPack.Serialization.MessagePackSerializer.Get(type).PackSingleObject(original);
 			messageSize = bytes.Length;
 			return bytes;
 		}
 
-		protected override T Deserialize<T>(byte[] bytes)
+		protected override object Deserialize(Type type, byte[] bytes)
 		{
-			return global::MsgPack.Serialization.MessagePackSerializer.Get<T>().UnpackSingleObject(bytes);
+			return global::MsgPack.Serialization.MessagePackSerializer.Get(type).UnpackSingleObject(bytes);
 		}
 
 		public override string ToString()

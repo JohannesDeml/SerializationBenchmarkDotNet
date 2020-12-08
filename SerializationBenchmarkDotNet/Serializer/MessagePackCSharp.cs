@@ -8,20 +8,22 @@
 // </author>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
+
 namespace SerializationBenchmark
 {
 	internal class MessagePackCSharp : ASerializer<byte[]>
 	{
-		protected override byte[] Serialize<T>(T original, out long messageSize)
+		protected override byte[] Serialize(Type type, object original, out long messageSize)
 		{
-			var bytes = MessagePack.MessagePackSerializer.Serialize(original);
+			var bytes = MessagePack.MessagePackSerializer.Serialize(type, original);
 			messageSize = bytes.Length;
 			return bytes;
 		}
 
-		protected override T Deserialize<T>(byte[] bytes)
+		protected override object Deserialize(Type type, byte[] bytes)
 		{
-			return MessagePack.MessagePackSerializer.Deserialize<T>(bytes);
+			return MessagePack.MessagePackSerializer.Deserialize(type, bytes);
 		}
 
 		public override string ToString()

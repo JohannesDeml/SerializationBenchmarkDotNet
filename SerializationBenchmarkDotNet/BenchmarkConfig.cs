@@ -24,13 +24,13 @@ namespace SerializationBenchmark
             Job baseConfig = Job.Default
                 .WithUnrollFactor(8)
                 // Quick run through to check everything is working
-                //.RunOncePerIteration()
+                .RunOncePerIteration()
                 .WithGcServer(true)
                 .WithGcForce(false);
 
-            AddJob(baseConfig
-                .WithRuntime(CoreRuntime.Core31)
-                .WithPlatform(Platform.X64));
+            // AddJob(baseConfig
+            //     .WithRuntime(CoreRuntime.Core31)
+            //     .WithPlatform(Platform.X64));
             
             AddJob(baseConfig
                 .WithRuntime(CoreRuntime.Core50)
@@ -77,6 +77,7 @@ namespace SerializationBenchmark
 
                 var instance = Activator.CreateInstance(mi.DeclaringType);
                 mi.DeclaringType.GetField(nameof(Benchmark.Serializer)).SetValue(instance, benchmarkCase.Parameters[0].Value);
+                mi.DeclaringType.GetField(nameof(Benchmark.Target)).SetValue(instance, benchmarkCase.Parameters[1].Value);
                 mi.DeclaringType.GetMethod(nameof(Benchmark.PrepareBenchmark)).Invoke(instance, null);
 
                 var byteSize = (long) mi.Invoke(instance, null);

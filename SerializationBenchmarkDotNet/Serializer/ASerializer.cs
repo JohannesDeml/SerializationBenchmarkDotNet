@@ -38,54 +38,48 @@ namespace SerializationBenchmark
 
 		public long BenchmarkSerialize<T>(T original)
 		{
-			var result = Serialize(original, out long messageSize);
-			serializationResults[typeof(T)] = new SerializationResult<TSerialization>(result, messageSize);
+			return BenchmarkSerialize(typeof(T), original);
+		}
+
+		public long BenchmarkSerialize(Type type, object original)
+		{
+			var result = Serialize(type, original, out long messageSize);
+			serializationResults[type] = new SerializationResult<TSerialization>(result, messageSize);
 			return messageSize;
 		}
 
 		public long BenchmarkDeserialize<T>(T original)
 		{
-			var target = serializationResults[typeof(T)];
-			var copy = Deserialize<T>(target.Result);
-			deserializationResults[typeof(T)] = copy;
+			return BenchmarkDeserialize(typeof(T), original);
+		}
+
+		public long BenchmarkDeserialize(Type type, object original)
+		{
+			var target = serializationResults[type];
+			var copy = Deserialize(type, target.Result);
+			deserializationResults[type] = copy;
 
 			return target.ByteSize;
 		}
 
 		public bool Validate<T>(T original) where T : IEquatable<T>
 		{
-			if (deserializationResults.TryGetValue(typeof(T), out object result))
-			{
-				return Validate(original, (T) result);
-			}
-
-			Console.WriteLine($"Serialized result with type {typeof(T)} not found!");
-			return false;
+			return Validate(typeof(T), original);
 		}
 		
-		public bool ValidateArray<T>(T[] array)
+		public bool Validate(Type type, object original)
 		{
-			if (deserializationResults.TryGetValue(typeof(T[]), out var result))
+			if (deserializationResults.TryGetValue(type, out object result))
 			{
-				return ValidateList(array, (IEnumerable<T>) result);
+				return original.Equals(result);
 			}
-			
-			Console.WriteLine($"Serialized result with type  {typeof(T[])} not found!");
+
+			Console.WriteLine($"Serialized result with type {type} not found!");
 			return false;
 		}
 
-		protected abstract TSerialization Serialize<T>(T original, out long messageSize);
-		protected abstract T Deserialize<T>(TSerialization serializedObject);
-
-		protected virtual bool Validate<T>(T original, T copy) where T : IEquatable<T>
-		{
-			return EqualityComparer<T>.Default.Equals(original, copy);
-		}
-		
-		protected virtual bool ValidateList<T>(IEnumerable<T> originalList, IEnumerable<T> copyList)
-		{
-			return originalList.SequenceEqual(copyList);
-		}
+		protected abstract TSerialization Serialize(Type type, object original, out long messageSize);
+		protected abstract object Deserialize(Type type, TSerialization serializedObject);
 
 		public virtual void Cleanup()
 		{
