@@ -52,16 +52,11 @@ namespace SerializationBenchmark
 			return x.Equals(other.x) && y.Equals(other.y) && z.Equals(other.z);
 		}
 
-		public override bool Equals(object obj)
+		public bool Equals(ISerializationTarget obj)
 		{
 			return obj is Vector3 other && Equals(other);
 		}
 
-		public override int GetHashCode()
-		{
-			return HashCode.Combine(x, y, z);
-		}
-		
 		public override string ToString()
 		{
 			return "Vector3";

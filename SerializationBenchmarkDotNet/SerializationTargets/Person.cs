@@ -52,10 +52,20 @@ namespace SerializationBenchmark
 		[ProtoMember(4)]
 		[DataMember]
 		public virtual Sex Sex { get; set; }
-
+		
 		public bool Equals(Person other)
 		{
-			return other != null && Age == other.Age && FirstName == other.FirstName && LastName == other.LastName && Sex == other.Sex;
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+			return Age == other.Age && FirstName == other.FirstName && LastName == other.LastName && Sex == other.Sex;
+		}
+
+		public bool Equals(ISerializationTarget obj)
+		{
+			if (ReferenceEquals(null, obj)) return false;
+			if (ReferenceEquals(this, obj)) return true;
+			if (obj.GetType() != this.GetType()) return false;
+			return Equals((Person) obj);
 		}
 
 		public override string ToString()

@@ -62,16 +62,16 @@ namespace SerializationBenchmark
 			return target.ByteSize;
 		}
 
-		public bool Validate<T>(T original) where T : IEquatable<T>
+		public bool Validate<T>(T original) where T : ISerializationTarget
 		{
 			return Validate(typeof(T), original);
 		}
 		
-		public bool Validate(Type type, object original)
+		public bool Validate(Type type, ISerializationTarget original)
 		{
 			if (deserializationResults.TryGetValue(type, out object result))
 			{
-				return original.Equals(result);
+				return EqualityComparer<ISerializationTarget>.Default.Equals(original, (ISerializationTarget)result);
 			}
 
 			Console.WriteLine($"Serialized result with type {type} not found!");

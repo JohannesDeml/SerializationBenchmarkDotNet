@@ -38,6 +38,8 @@ namespace SerializationBenchmark
 
 		[ParamsSource(nameof(Targets))]
 		public ISerializationTarget Target;
+
+		private int loops = 100;
 		
 		public IEnumerable<ISerializer> Serializers => new ISerializer[]
 		{
@@ -72,7 +74,7 @@ namespace SerializationBenchmark
 		public long Serialize()
 		{
 			var size = 0L;
-			for (int i = 0; i < 100; i++)
+			for (int i = 0; i < loops; i++)
 			{
 				size += Serializer.BenchmarkSerialize(Target.GetType(), Target);
 			}
@@ -85,7 +87,7 @@ namespace SerializationBenchmark
 		{
 			var size = 0L;
 
-			for (int i = 0; i < 100; i++)
+			for (int i = 0; i < loops; i++)
 			{
 				size += Serializer.BenchmarkDeserialize(Target.GetType(), Target);
 			}
@@ -105,14 +107,13 @@ namespace SerializationBenchmark
 			Serializer.Cleanup();
 		}
 		
-		private bool Validate(Type type, object original)
+		private void Validate(Type type, ISerializationTarget original)
 		{
 			bool valid = Serializer.Validate(type, original);
 			if (!valid)
 			{
-				Console.WriteLine($"Validation error for {original.GetType()} with serializer {Serializer.GetType()}");
+				throw new Exception($"Validation error for {original.GetType()} with serializer {Serializer.GetType()}");
 			}
-			return valid;
 		}
 	}
 }

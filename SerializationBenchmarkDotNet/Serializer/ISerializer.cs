@@ -19,8 +19,8 @@ namespace SerializationBenchmark
 		long BenchmarkSerialize(Type type, object original);
 		long BenchmarkDeserialize<T>(T original);
 		long BenchmarkDeserialize(Type type, object original);
-		bool Validate<T>(T original) where T : IEquatable<T>;
-		bool Validate(Type type, object original);
+		bool Validate<T>(T original) where T : ISerializationTarget;
+		bool Validate(Type type, ISerializationTarget original);
 		void Cleanup();
 	}
 }

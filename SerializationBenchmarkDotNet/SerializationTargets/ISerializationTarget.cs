@@ -12,7 +12,7 @@ using System;
 
 namespace SerializationBenchmark
 {
-	public interface ISerializationTarget
+	public interface ISerializationTarget :IEquatable<ISerializationTarget>
 	{
 		Type GetType();
 	}
