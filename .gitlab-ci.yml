@@ -19,7 +19,7 @@ benchmark_job:
   script:
     # Build Chunks.Benchmarks
     - dotnet restore $BENCHMARK_PROJECT_PATH
-    - dotnet build $BENCHMARK_PROJECT_PATH --configuration Release --no-restore --output $BENCHMARK_FOLDER
+    - dotnet build $BENCHMARK_PROJECT_PATH --framework net5.0 --configuration Release --no-restore --output $BENCHMARK_FOLDER
     
     # Run the benchmarks
     - $BENCHMARK_FOLDER/$BENCHMARK_NAME
