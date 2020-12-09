@@ -29,28 +29,28 @@ namespace SerializationBenchmark
 	public abstract class ASerializer<TSerialization>: ISerializer
 	{
 		private Dictionary<Type, SerializationResult<TSerialization>> serializationResults;
-		private Dictionary<Type, object> deserializationResults;
+		private Dictionary<Type, ISerializationTarget> deserializationResults;
 		protected ASerializer()
 		{
 			serializationResults = new Dictionary<Type, SerializationResult<TSerialization>>();
-			deserializationResults = new Dictionary<Type, object>();
+			deserializationResults = new Dictionary<Type, ISerializationTarget>();
 		}
 
-		public long BenchmarkSerialize<T>(T original)
+		public long BenchmarkSerialize<T>(T original) where T: ISerializationTarget
 		{
 			var result = Serialize(original, out long messageSize);
 			serializationResults[typeof(T)] = new SerializationResult<TSerialization>(result, messageSize);
 			return messageSize;
 		}
 
-		public long BenchmarkSerialize(Type type, object original)
+		public long BenchmarkSerialize(Type type, ISerializationTarget original)
 		{
 			var result = Serialize(type, original, out long messageSize);
 			serializationResults[type] = new SerializationResult<TSerialization>(result, messageSize);
 			return messageSize;
 		}
 
-		public long BenchmarkDeserialize<T>(T original)
+		public long BenchmarkDeserialize<T>(T original) where T: ISerializationTarget
 		{
 			var type = typeof(T);
 			var target = serializationResults[type];
@@ -60,7 +60,7 @@ namespace SerializationBenchmark
 			return target.ByteSize;
 		}
 
-		public long BenchmarkDeserialize(Type type, object original)
+		public long BenchmarkDeserialize(Type type, ISerializationTarget original)
 		{
 			var target = serializationResults[type];
 			var copy = Deserialize(type, target.Result);
@@ -76,9 +76,9 @@ namespace SerializationBenchmark
 		
 		public bool Validate(Type type, ISerializationTarget original)
 		{
-			if (deserializationResults.TryGetValue(type, out object result))
+			if (deserializationResults.TryGetValue(type, out ISerializationTarget result))
 			{
-				return EqualityComparer<ISerializationTarget>.Default.Equals(original, (ISerializationTarget)result);
+				return EqualityComparer<ISerializationTarget>.Default.Equals(original, result);
 			}
 
 			Console.WriteLine($"Serialized result with type {type} not found!");
@@ -91,8 +91,8 @@ namespace SerializationBenchmark
 		#endregion
 		
 		#region Non-GenericSerialization
-		protected abstract TSerialization Serialize(Type type, object original, out long messageSize);
-		protected abstract object Deserialize(Type type, TSerialization serializedObject);
+		protected abstract TSerialization Serialize(Type type, ISerializationTarget original, out long messageSize);
+		protected abstract ISerializationTarget Deserialize(Type type, TSerialization serializedObject);
 		#endregion
 
 		public virtual void Cleanup()

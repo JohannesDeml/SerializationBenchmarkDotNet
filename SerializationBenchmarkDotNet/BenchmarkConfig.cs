@@ -1,6 +1,12 @@
-﻿// Fork from https://github.com/neuecc/MessagePack-CSharp/blob/master/benchmark/SerializerBenchmark/BenchmarkConfig.cs
-// Copyright (c) All contributors. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="BenchmarkConfig.cs">
+//   Copyright (c) 2020 Johannes Deml. All rights reserved.
+// </copyright>
+// <author>
+//   Johannes Deml
+//   public@deml.io
+// </author>
+// --------------------------------------------------------------------------------------------------------------------
 
 using System;
 using System.Globalization;
@@ -17,87 +23,109 @@ using Perfolizer.Horology;
 
 namespace SerializationBenchmark
 {
-    public class BenchmarkConfig : ManualConfig
-    {
-        public BenchmarkConfig()
-        {
-            Job baseConfig = Job.Default
-                .WithUnrollFactor(8)
-                // Quick run through to check everything is working
-                //.RunOncePerIteration()
-                .WithGcServer(true)
-                .WithGcForce(false);
+	public class BenchmarkConfig : ManualConfig
+	{
+		public BenchmarkConfig()
+		{
+			Job baseConfig = Job.Default
+				.WithUnrollFactor(8)
+				// Quick run through to check everything is working
+				//.RunOncePerIteration()
+				.WithGcServer(true)
+				.WithGcForce(false);
 
-            AddJob(baseConfig
-                .WithRuntime(CoreRuntime.Core31)
-                .WithPlatform(Platform.X64));
-            
-            AddJob(baseConfig
-                .WithRuntime(CoreRuntime.Core50)
-                .WithPlatform(Platform.X64));
+			AddJob(baseConfig
+				.WithRuntime(CoreRuntime.Core31)
+				.WithPlatform(Platform.X64));
 
-            AddColumn(new DataSizeColumn());
-            AddExporter(MarkdownExporter.GitHub);
-            var processableStyle = new SummaryStyle(CultureInfo.InvariantCulture, false, SizeUnit.KB, TimeUnit.Nanosecond, 
-                false, true, 100);
-            AddExporter(new CsvExporter(CsvSeparator.Comma, processableStyle));
-            AddDiagnoser(MemoryDiagnoser.Default);
-        }
+			AddJob(baseConfig
+				.WithRuntime(CoreRuntime.Core50)
+				.WithPlatform(Platform.X64));
 
-        public class DataSizeColumn : IColumn
-        {
-            public string Id => "DataSize";
+			AddColumn(new DataSizeColumn());
+			AddExporter(MarkdownExporter.GitHub);
+			var processableStyle = new SummaryStyle(CultureInfo.InvariantCulture, false, SizeUnit.KB, TimeUnit.Nanosecond,
+				false, true, 100);
+			AddExporter(new CsvExporter(CsvSeparator.Comma, processableStyle));
+			AddDiagnoser(MemoryDiagnoser.Default);
+		}
+	}
 
-            public string ColumnName => "DataSize";
+	public class DataSizeColumn : IColumn
+	{
+		public string Id => "DataSize";
 
-            public bool AlwaysShow => true;
+		public string ColumnName => "DataSize";
 
-            public ColumnCategory Category => ColumnCategory.Custom;
+		public bool AlwaysShow => true;
 
-            public int PriorityInCategory => int.MaxValue;
+		public ColumnCategory Category => ColumnCategory.Custom;
 
-            public bool IsNumeric => true;
+		public int PriorityInCategory => int.MaxValue;
 
-            public UnitType UnitType => UnitType.Size;
+		public bool IsNumeric => true;
 
-            public string Legend => null;
+		public UnitType UnitType => UnitType.Size;
 
-            public string GetValue(Summary summary, BenchmarkCase benchmarkCase)
-            {
-                return this.GetValue(summary, benchmarkCase, null);
-            }
+		public string Legend => null;
 
-            public string GetValue(Summary summary, BenchmarkCase benchmarkCase, SummaryStyle style)
-            {
-                System.Reflection.MethodInfo mi = benchmarkCase.Descriptor.WorkloadMethod;
-                if (!mi.Name.Contains("Serialize"))
-                {
-                    return "-";
-                }
+		public string GetValue(Summary summary, BenchmarkCase benchmarkCase)
+		{
+			return this.GetValue(summary, benchmarkCase, null);
+		}
 
-                var instance = Activator.CreateInstance(mi.DeclaringType);
-                mi.DeclaringType.GetField(nameof(Benchmark.Serializer)).SetValue(instance, benchmarkCase.Parameters[0].Value);
-                mi.DeclaringType.GetField(nameof(Benchmark.Target)).SetValue(instance, benchmarkCase.Parameters[1].Value);
-                mi.DeclaringType.GetMethod(nameof(Benchmark.PrepareBenchmark)).Invoke(instance, null);
+		public string GetValue(Summary summary, BenchmarkCase benchmarkCase, SummaryStyle style)
+		{
+			var type = benchmarkCase.Descriptor.Type;
+			var report = summary[benchmarkCase];
+			System.Reflection.MethodInfo mi = benchmarkCase.Descriptor.WorkloadMethod;
 
-                var byteSize = (long) mi.Invoke(instance, null);
-                
-                var cultureInfo = summary.GetCultureInfo();
-                if (style.PrintUnitsInContent)
-                    return SizeValue.FromBytes(byteSize).ToString(style.SizeUnit, cultureInfo);
+			if (!typeof(ISerializableBenchmark).IsAssignableFrom(type))
+			{
+				return string.Empty;
+			}
 
-                return byteSize.ToString("0.##", cultureInfo);
-            }
+			if (!mi.Name.Contains("Serialize"))
+			{
+				return "-";
+			}
 
-            public bool IsAvailable(Summary summary)
-            {
-                return true;
-            }
+			if (!report.Success || !report.BuildResult.IsBuildSuccess || report.ExecuteResults.Count == 0)
+			{
+				return "NA";
+			}
 
-            public bool IsDefault(Summary summary, BenchmarkCase benchmarkCase)
-            {
-                return false;
-            }
-        }
-    }
+			var instance = Activator.CreateInstance(type) as ISerializableBenchmark;
+			if (instance == null)
+			{
+				return "NA";
+			}
+
+			var paramInstances = benchmarkCase.Parameters;
+			instance.Serializer = (ISerializer) paramInstances[nameof(ISerializableBenchmark.Serializer)];
+			instance.Target = (ISerializationTarget) paramInstances[nameof(ISerializableBenchmark.Target)];
+			instance.Generic = (bool) paramInstances[nameof(ISerializableBenchmark.Generic)];
+
+			instance.PrepareBenchmark();
+			var byteSize = instance.Serialize();
+
+			var cultureInfo = summary.GetCultureInfo();
+			if (style.PrintUnitsInContent)
+			{
+				return SizeValue.FromBytes(byteSize).ToString(style.SizeUnit, cultureInfo);
+			}
+
+			return byteSize.ToString("0.##", cultureInfo);
+		}
+
+		public bool IsAvailable(Summary summary)
+		{
+			return true;
+		}
+
+		public bool IsDefault(Summary summary, BenchmarkCase benchmarkCase)
+		{
+			return false;
+		}
+	}
 }

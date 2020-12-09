@@ -37,16 +37,16 @@ namespace SerializationBenchmark
 		#endregion
 		
 		#region Non-GenericSerialization
-		protected override byte[] Serialize(Type type, object original, out long messageSize)
+		protected override byte[] Serialize(Type type, ISerializationTarget original, out long messageSize)
 		{
 			var bytes = MessagePack.MessagePackSerializer.Serialize(type, original, lz4Options);
 			messageSize = bytes.Length;
 			return bytes;
 		}
 
-		protected override object Deserialize(Type type, byte[] bytes)
+		protected override ISerializationTarget Deserialize(Type type, byte[] bytes)
 		{
-			return MessagePack.MessagePackSerializer.Deserialize(type, bytes, lz4Options);
+			return (ISerializationTarget) MessagePack.MessagePackSerializer.Deserialize(type, bytes, lz4Options);
 		}
 		#endregion
 

@@ -15,16 +15,16 @@ using BenchmarkDotNet.Attributes;
 namespace SerializationBenchmark
 {
 	[Config(typeof(BenchmarkConfig))]
-	public class Benchmark
+	public class Benchmark : ISerializableBenchmark
 	{
 		[ParamsSource(nameof(Serializers))]
-		public ISerializer Serializer;
+		public ISerializer Serializer { get; set; }
 
 		[ParamsSource(nameof(Targets))]
-		public ISerializationTarget Target;
+		public ISerializationTarget Target { get; set; }
 
 		[ParamsAllValues]
-		public bool Generic;
+		public bool Generic { get; set; }
 		
 		public IEnumerable<ISerializer> Serializers => new ISerializer[]
 		{

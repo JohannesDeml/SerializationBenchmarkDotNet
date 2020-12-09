@@ -27,7 +27,7 @@ namespace SerializationBenchmark
 		
 		IEnumerable<Type> GetSubclasses(Type type)
 		{
-			return type.Assembly.GetTypes().Where(t => type.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+			return type.Assembly.GetTypes().Where(t => type.IsAssignableFrom(t));
 		}
 		
 		#region GenericSerialization
@@ -49,20 +49,20 @@ namespace SerializationBenchmark
 		#endregion
 		
 		#region Non-GenericSerialization
-		protected override MemoryStream Serialize(Type type, object original, out long messageSize)
+		protected override MemoryStream Serialize(Type type, ISerializationTarget original, out long messageSize)
 		{
 			var stream = new MemoryStream();
-			netSerializer.SerializeDirect(stream, original);
+			netSerializer.SerializeDirect(stream, (object) original);
 			messageSize = stream.Position;
 			return stream;
 		}
 
-		protected override object Deserialize(Type type, MemoryStream stream)
+		protected override ISerializationTarget Deserialize(Type type, MemoryStream stream)
 		{
 			object copy;
 			stream.Position = 0;
 			netSerializer.DeserializeDirect(stream, out copy);
-			return copy;
+			return (ISerializationTarget) copy;
 		}
 		#endregion
 

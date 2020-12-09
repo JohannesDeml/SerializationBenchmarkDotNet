@@ -29,16 +29,16 @@ namespace SerializationBenchmark
 		#endregion
 		
 		#region Non-GenericSerialization
-		protected override byte[] Serialize(Type type, object original, out long messageSize)
+		protected override byte[] Serialize(Type type, ISerializationTarget original, out long messageSize)
 		{
 			var bytes = global::MsgPack.Serialization.MessagePackSerializer.Get(type).PackSingleObject(original);
 			messageSize = bytes.Length;
 			return bytes;
 		}
 
-		protected override object Deserialize(Type type, byte[] bytes)
+		protected override ISerializationTarget Deserialize(Type type, byte[] bytes)
 		{
-			return global::MsgPack.Serialization.MessagePackSerializer.Get(type).UnpackSingleObject(bytes);
+			return (ISerializationTarget) global::MsgPack.Serialization.MessagePackSerializer.Get(type).UnpackSingleObject(bytes);
 		}
 		#endregion
 
