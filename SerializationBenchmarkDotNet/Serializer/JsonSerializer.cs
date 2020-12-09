@@ -24,6 +24,35 @@ namespace SerializationBenchmark
 			jsonSerializer = new Newtonsoft.Json.JsonSerializer();
 		}
 
+		#region GenericSerialization
+		protected override MemoryStream Serialize<T>(T original, out long messageSize)
+		{
+			var stream = new MemoryStream();
+			using (var tw = new StreamWriter(stream, Encoding.UTF8, 1024, true))
+			using (var jw = new JsonTextWriter(tw))
+			{
+				jsonSerializer.Serialize(jw, original);
+			}
+
+			messageSize = stream.Position;
+			return stream;
+		}
+
+		protected override T Deserialize<T>(MemoryStream stream)
+		{
+			T copy = default(T);
+			stream.Position = 0;
+			using (var tr = new StreamReader(stream, Encoding.UTF8, false, 1024, true))
+			using (var jr = new JsonTextReader(tr))
+			{
+				copy = jsonSerializer.Deserialize<T>(jr);
+			}
+
+			return copy;
+		}
+		#endregion
+		
+		#region Non-GenericSerialization
 		protected override MemoryStream Serialize(Type type, object original, out long messageSize)
 		{
 			var stream = new MemoryStream();
@@ -49,6 +78,7 @@ namespace SerializationBenchmark
 
 			return copy;
 		}
+		#endregion
 
 		public override string ToString()
 		{

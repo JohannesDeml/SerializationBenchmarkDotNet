@@ -14,22 +14,6 @@ using BenchmarkDotNet.Attributes;
 
 namespace SerializationBenchmark
 {
-	public class SerializationTargets<T>
-	{
-		public readonly Dictionary<Type, T> Targets;
-
-		public SerializationTargets()
-		{
-			Targets = new Dictionary<Type, T>();
-		}
-
-		public SerializationTargets<T> Add<U>(U instance) where U : T
-		{
-			Targets[typeof(U)] = instance;
-			return this;
-		}
-	}
-	
 	[Config(typeof(BenchmarkConfig))]
 	public class Benchmark
 	{
@@ -39,7 +23,8 @@ namespace SerializationBenchmark
 		[ParamsSource(nameof(Targets))]
 		public ISerializationTarget Target;
 
-		private int loops = 1;
+		[ParamsAllValues]
+		public bool Generic;
 		
 		public IEnumerable<ISerializer> Serializers => new ISerializer[]
 		{
@@ -74,7 +59,11 @@ namespace SerializationBenchmark
 		public long Serialize()
 		{
 			var size = 0L;
-			for (int i = 0; i < loops; i++)
+			if (Generic)
+			{
+				size += Target.Serialize(Serializer);
+			}
+			else
 			{
 				size += Serializer.BenchmarkSerialize(Target.GetType(), Target);
 			}
@@ -86,8 +75,11 @@ namespace SerializationBenchmark
 		public long Deserialize()
 		{
 			var size = 0L;
-
-			for (int i = 0; i < loops; i++)
+			if (Generic)
+			{
+				size += Target.Deserialize(Serializer);
+			}
+			else
 			{
 				size += Serializer.BenchmarkDeserialize(Target.GetType(), Target);
 			}

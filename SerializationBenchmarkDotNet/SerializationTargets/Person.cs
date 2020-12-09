@@ -72,5 +72,15 @@ namespace SerializationBenchmark
 		{
 			return "Person";
 		}
+
+		public long Serialize(ISerializer serializer)
+		{
+			return serializer.BenchmarkSerialize(this);
+		}
+		
+		public long Deserialize(ISerializer serializer)
+		{
+			return serializer.BenchmarkDeserialize(this);
+		}
 	}
 }

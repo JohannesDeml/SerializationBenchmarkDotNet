@@ -29,7 +29,26 @@ namespace SerializationBenchmark
 		{
 			return type.Assembly.GetTypes().Where(t => type.IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
 		}
+		
+		#region GenericSerialization
+		protected override MemoryStream Serialize<T>(T original, out long messageSize)
+		{
+			var stream = new MemoryStream();
+			netSerializer.SerializeDirect<T>(stream, original);
+			messageSize = stream.Position;
+			return stream;
+		}
 
+		protected override T Deserialize<T>(MemoryStream stream)
+		{
+			T copy = default(T);
+			stream.Position = 0;
+			netSerializer.DeserializeDirect<T>(stream, out copy);
+			return copy;
+		}
+		#endregion
+		
+		#region Non-GenericSerialization
 		protected override MemoryStream Serialize(Type type, object original, out long messageSize)
 		{
 			var stream = new MemoryStream();
@@ -45,6 +64,7 @@ namespace SerializationBenchmark
 			netSerializer.DeserializeDirect(stream, out copy);
 			return copy;
 		}
+		#endregion
 
 		public override string ToString()
 		{

@@ -61,5 +61,15 @@ namespace SerializationBenchmark
 		{
 			return "Vector3";
 		}
+
+		public long Serialize(ISerializer serializer)
+		{
+			return serializer.BenchmarkSerialize(this);
+		}
+		
+		public long Deserialize(ISerializer serializer)
+		{
+			return serializer.BenchmarkDeserialize(this);
+		}
 	}
 }

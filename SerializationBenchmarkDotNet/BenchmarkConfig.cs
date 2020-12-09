@@ -24,7 +24,7 @@ namespace SerializationBenchmark
             Job baseConfig = Job.Default
                 .WithUnrollFactor(8)
                 // Quick run through to check everything is working
-                // .RunOncePerIteration()
+                //.RunOncePerIteration()
                 .WithGcServer(true)
                 .WithGcForce(false);
 

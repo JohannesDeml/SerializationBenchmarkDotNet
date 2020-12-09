@@ -22,6 +22,21 @@ namespace SerializationBenchmark
 			lz4Options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
 		}
 
+		#region GenericSerialization
+		protected override byte[] Serialize<T>(T original, out long messageSize)
+		{
+			var bytes = MessagePack.MessagePackSerializer.Serialize(original, lz4Options);
+			messageSize = bytes.Length;
+			return bytes;
+		}
+
+		protected override T Deserialize<T>(byte[] bytes)
+		{
+			return MessagePack.MessagePackSerializer.Deserialize<T>(bytes, lz4Options);
+		}
+		#endregion
+		
+		#region Non-GenericSerialization
 		protected override byte[] Serialize(Type type, object original, out long messageSize)
 		{
 			var bytes = MessagePack.MessagePackSerializer.Serialize(type, original, lz4Options);
@@ -33,6 +48,7 @@ namespace SerializationBenchmark
 		{
 			return MessagePack.MessagePackSerializer.Deserialize(type, bytes, lz4Options);
 		}
+		#endregion
 
 		public override string ToString()
 		{

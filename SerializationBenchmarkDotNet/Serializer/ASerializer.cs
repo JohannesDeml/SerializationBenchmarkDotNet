@@ -38,7 +38,9 @@ namespace SerializationBenchmark
 
 		public long BenchmarkSerialize<T>(T original)
 		{
-			return BenchmarkSerialize(typeof(T), original);
+			var result = Serialize(original, out long messageSize);
+			serializationResults[typeof(T)] = new SerializationResult<TSerialization>(result, messageSize);
+			return messageSize;
 		}
 
 		public long BenchmarkSerialize(Type type, object original)
@@ -50,7 +52,12 @@ namespace SerializationBenchmark
 
 		public long BenchmarkDeserialize<T>(T original)
 		{
-			return BenchmarkDeserialize(typeof(T), original);
+			var type = typeof(T);
+			var target = serializationResults[type];
+			var copy = Deserialize<T>(target.Result);
+			deserializationResults[type] = copy;
+
+			return target.ByteSize;
 		}
 
 		public long BenchmarkDeserialize(Type type, object original)
@@ -78,8 +85,15 @@ namespace SerializationBenchmark
 			return false;
 		}
 
+		#region GenericSerialization
+		protected abstract TSerialization Serialize<T>(T original, out long messageSize);
+		protected abstract T Deserialize<T>(TSerialization serializedObject);
+		#endregion
+		
+		#region Non-GenericSerialization
 		protected abstract TSerialization Serialize(Type type, object original, out long messageSize);
 		protected abstract object Deserialize(Type type, TSerialization serializedObject);
+		#endregion
 
 		public virtual void Cleanup()
 		{
