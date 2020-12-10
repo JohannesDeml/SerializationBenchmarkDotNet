@@ -28,7 +28,7 @@ namespace SerializationBenchmark
 		
 		public IEnumerable<ISerializer> Serializers => new ISerializer[]
 		{
-			new FlatBuffer(),
+			new FlatBuffers(),
 			new MessagePackCSharp(),
 			// new Lz4MessagePackCSharp(),
 			// new NetSerializer(),
@@ -39,7 +39,7 @@ namespace SerializationBenchmark
 
 		public IEnumerable<ISerializationTarget> Targets => new ISerializationTarget[]
 		{
-			//new Person {Age = 28, FirstName = "FirstName", LastName = "LastName", Sex = Sex.Female},
+			new Person {Age = 28, FirstName = "FirstName", LastName = "LastName", Sex = Sex.Female},
 			new Vector3(12.345f, 987.654f, 1.3f)
 		};
 

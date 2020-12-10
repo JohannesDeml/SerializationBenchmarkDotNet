@@ -48,6 +48,28 @@ namespace SerializationBenchmark
 				return byteArray;
 			}
 
+			if (type == typeof(Person))
+			{
+				var person = (Person) original;
+				var firstNameOffset = builder.CreateString(person.FirstName);
+				var lastNameOffset = builder.CreateString(person.LastName);
+				
+				FlatbufferObjects.Person.StartPerson(builder);
+				FlatbufferObjects.Person.AddAge(builder, person.Age);
+				FlatbufferObjects.Person.AddFirstName(builder, firstNameOffset);
+				FlatbufferObjects.Person.AddLastName(builder, lastNameOffset);
+				FlatbufferObjects.Person.AddSex(builder, (FlatbufferObjects.Sex)person.Sex);
+				var flatBufferPerson = FlatbufferObjects.Person.EndPerson(builder);
+				builder.Finish(flatBufferPerson.Value);
+				
+				var buffer = builder.DataBuffer;
+				messageSize = buffer.Length - buffer.Position;
+				
+				var byteArray = builder.SizedByteArray();
+				builder.Clear();
+				return byteArray;
+			}
+
 			messageSize = -1;
 			return null;
 		}
@@ -61,6 +83,18 @@ namespace SerializationBenchmark
 				var vector3 = new FlatbufferObjects.Vector3().__assign(4, buf);
 				
 				return new Vector3(vector3.X, vector3.Y, vector3.Z);
+			}
+
+			if (type == typeof(Person))
+			{
+				var person = FlatbufferObjects.Person.GetRootAsPerson(buf);
+				return new Person()
+				{
+					Age = person.Age,
+					FirstName = person.FirstName,
+					LastName = person.LastName,
+					Sex = (Sex) person.Sex
+				};
 			}
 
 			return null;
