@@ -76,7 +76,7 @@ namespace SerializationBenchmark
 		
 		public bool Validate(Type type, ISerializationTarget original)
 		{
-			if (deserializationResults.TryGetValue(type, out ISerializationTarget result))
+			if (GetResult(type, out ISerializationTarget result))
 			{
 				Console.WriteLine(original.ToReadableString());
 				Console.WriteLine(result.ToReadableString());
@@ -85,6 +85,11 @@ namespace SerializationBenchmark
 
 			Console.WriteLine($"Serialized result with type {type} not found!");
 			return false;
+		}
+
+		protected virtual bool GetResult(Type type, out ISerializationTarget result)
+		{
+			return deserializationResults.TryGetValue(type, out result);
 		}
 
 		#region GenericSerialization

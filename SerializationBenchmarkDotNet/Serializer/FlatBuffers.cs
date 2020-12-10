@@ -9,18 +9,20 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using FlatBuffers;
 
 namespace SerializationBenchmark
 {
 	internal class FlatBuffers : ASerializer<byte[]>
 	{
-		private FlatBufferBuilder builder;
+		private readonly Dictionary<Type, IFlatbufferObject> deserializationIntermediateResults;
+		private readonly FlatBufferBuilder builder;
 
 		public FlatBuffers()
 		{
+			deserializationIntermediateResults = new Dictionary<Type, IFlatbufferObject>();
 			builder = new FlatBufferBuilder(1);
-			
 		}
 
 		protected override byte[] Serialize<T>(T original, out long messageSize)
@@ -70,36 +72,57 @@ namespace SerializationBenchmark
 				return byteArray;
 			}
 
-			messageSize = -1;
-			return null;
+			throw new NotImplementedException($"Serialization for type {type} not implemented!");
 		}
 
 		protected override ISerializationTarget Deserialize(Type type, byte[] serializedObject)
 		{
 			var buf = new ByteBuffer(serializedObject);
-			
+
 			if (type == typeof(Vector3))
 			{
 				var vector3 = new FlatbufferObjects.Vector3().__assign(4, buf);
-				
-				return new Vector3(vector3.X, vector3.Y, vector3.Z);
+				deserializationIntermediateResults[type] = vector3;
+				return new Vector3();
 			}
 
 			if (type == typeof(Person))
 			{
 				var person = FlatbufferObjects.Person.GetRootAsPerson(buf);
-				return new Person()
+				deserializationIntermediateResults[type] = person;
+				return null;
+			}
+
+			throw new NotImplementedException($"Deserialization for type {type} not implemented!");
+		}
+
+		protected override bool GetResult(Type type, out ISerializationTarget result)
+		{
+			var intermediateResult = deserializationIntermediateResults[type];
+
+			if (type == typeof(Vector3))
+			{
+				var vector3 = (FlatbufferObjects.Vector3) intermediateResult;
+				result = new Vector3(vector3.X, vector3.Y, vector3.Z);
+				return true;
+			}
+			
+			if (type == typeof(Person))
+			{
+				var person = (FlatbufferObjects.Person) intermediateResult;
+				result = new Person()
 				{
 					Age = person.Age,
 					FirstName = person.FirstName,
 					LastName = person.LastName,
 					Sex = (Sex) person.Sex
 				};
+				return true;
 			}
 
-			return null;
+			throw new NotImplementedException($"Conversion for type {type} not implemented!");
 		}
-		
+
 		public override string ToString()
 		{
 			return "FlatBuffers";

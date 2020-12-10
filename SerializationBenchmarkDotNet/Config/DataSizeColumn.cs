@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BenchmarkConfig.cs">
+// <copyright file="DataSizeColumn.cs">
 //   Copyright (c) 2020 Johannes Deml. All rights reserved.
 // </copyright>
 // <author>
@@ -9,50 +9,14 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System;
-using System.Globalization;
 using System.Linq;
 using BenchmarkDotNet.Columns;
-using BenchmarkDotNet.Configs;
-using BenchmarkDotNet.Diagnosers;
-using BenchmarkDotNet.Environments;
-using BenchmarkDotNet.Exporters;
-using BenchmarkDotNet.Exporters.Csv;
-using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Parameters;
 using BenchmarkDotNet.Reports;
 using BenchmarkDotNet.Running;
-using Perfolizer.Horology;
 
 namespace SerializationBenchmark
 {
-	public class BenchmarkConfig : ManualConfig
-	{
-		public BenchmarkConfig()
-		{
-			Job baseConfig = Job.Default
-				.WithUnrollFactor(8)
-				// Quick run through to check everything is working
-				//.RunOncePerIteration()
-				.WithGcServer(true)
-				.WithGcForce(false);
-
-			// AddJob(baseConfig
-			// 	.WithRuntime(CoreRuntime.Core31)
-			// 	.WithPlatform(Platform.X64));
-
-			AddJob(baseConfig
-				.WithRuntime(CoreRuntime.Core50)
-				.WithPlatform(Platform.X64));
-
-			AddColumn(new DataSizeColumn());
-			AddExporter(MarkdownExporter.GitHub);
-			var processableStyle = new SummaryStyle(CultureInfo.InvariantCulture, false, SizeUnit.KB, TimeUnit.Nanosecond,
-				false, true, 100);
-			AddExporter(new CsvExporter(CsvSeparator.Comma, processableStyle));
-			AddDiagnoser(new EventPipeProfiler(EventPipeProfile.GcVerbose));
-		}
-	}
-
 	public class DataSizeColumn : IColumn
 	{
 		public string Id => "DataSize";
@@ -104,9 +68,9 @@ namespace SerializationBenchmark
 			}
 
 			var paramInstances = benchmarkCase.Parameters;
-			instance.Serializer = SetInstanceSave(instance.Serializer, paramInstances, nameof(instance.Serializer));
-			instance.Target = SetInstanceSave(instance.Target, paramInstances, nameof(instance.Target));
-			instance.Generic = SetInstanceSave(instance.Generic, paramInstances, nameof(instance.Generic));
+			instance.Serializer = SetInstanceValueSave(instance.Serializer, paramInstances, nameof(instance.Serializer));
+			instance.Target = SetInstanceValueSave(instance.Target, paramInstances, nameof(instance.Target));
+			instance.Generic = SetInstanceValueSave(instance.Generic, paramInstances, nameof(instance.Generic));
 
 			instance.PrepareBenchmark();
 			var byteSize = instance.Serialize();
@@ -120,12 +84,12 @@ namespace SerializationBenchmark
 			return byteSize.ToString("0.##", cultureInfo);
 		}
 
-		private T SetInstanceSave<T>(T current, ParameterInstances instances, string name)
+		private T SetInstanceValueSave<T>(T current, ParameterInstances instances, string name)
 		{
 			var instance = instances.Items.FirstOrDefault(item => item.Name == name);
 			if (instance == null)
 			{
-				Console.WriteLine($"Could not find parameter {name}");
+				Console.WriteLine($"{nameof(DataSizeColumn)}: Could not find parameter {name} - skipping instance value change");
 				return current;
 			}
 			

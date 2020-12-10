@@ -30,11 +30,11 @@ namespace SerializationBenchmark
 		{
 			new FlatBuffers(),
 			new MessagePackCSharp(),
-			// new Lz4MessagePackCSharp(),
-			// new NetSerializer(),
-			// new MsgPack(),
-			// new JsonSerializer(),
-			// new ProtobufNet(),
+			new Lz4MessagePackCSharp(),
+			new NetSerializer(),
+			new MsgPack(),
+			new JsonSerializer(),
+			new ProtobufNet(),
 		};
 
 		public IEnumerable<ISerializationTarget> Targets => new ISerializationTarget[]
