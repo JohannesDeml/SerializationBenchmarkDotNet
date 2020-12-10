@@ -11,13 +11,13 @@ variables:
 stages:
   - benchmark
 
-# Only run for benchmark branch
+# Only run on benchmark branch
 benchmark_job:
   stage: benchmark
   only:
     - benchmark
   script:
-    # Build Chunks.Benchmarks
+    # Build benchmarks
     - dotnet restore $BENCHMARK_PROJECT_PATH
     - dotnet build $BENCHMARK_PROJECT_PATH --framework net5.0 --configuration Release --no-restore --output $BENCHMARK_FOLDER
     

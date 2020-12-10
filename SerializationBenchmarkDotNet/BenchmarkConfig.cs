@@ -34,9 +34,9 @@ namespace SerializationBenchmark
 				.WithGcServer(true)
 				.WithGcForce(false);
 
-			AddJob(baseConfig
-				.WithRuntime(CoreRuntime.Core31)
-				.WithPlatform(Platform.X64));
+			// AddJob(baseConfig
+			// 	.WithRuntime(CoreRuntime.Core31)
+			// 	.WithPlatform(Platform.X64));
 
 			AddJob(baseConfig
 				.WithRuntime(CoreRuntime.Core50)
@@ -47,7 +47,7 @@ namespace SerializationBenchmark
 			var processableStyle = new SummaryStyle(CultureInfo.InvariantCulture, false, SizeUnit.KB, TimeUnit.Nanosecond,
 				false, true, 100);
 			AddExporter(new CsvExporter(CsvSeparator.Comma, processableStyle));
-			AddDiagnoser(MemoryDiagnoser.Default);
+			AddDiagnoser(new EventPipeProfiler(EventPipeProfile.GcVerbose));
 		}
 	}
 

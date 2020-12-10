@@ -23,8 +23,8 @@ namespace SerializationBenchmark
 		[ParamsSource(nameof(Targets))]
 		public ISerializationTarget Target { get; set; }
 
-		[ParamsAllValues]
-		public bool Generic { get; set; }
+		//[ParamsAllValues]
+		public bool Generic { get; set; } = true;
 		
 		public IEnumerable<ISerializer> Serializers => new ISerializer[]
 		{
