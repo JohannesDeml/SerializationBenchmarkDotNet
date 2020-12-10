@@ -73,6 +73,11 @@ namespace SerializationBenchmark
 			return "Person";
 		}
 
+		public string ToReadableString()
+		{
+			return $"Person Age: {Age}, FirstName: {FirstName}, LastName: {LastName}, Sex: {Sex}";
+		}
+
 		public long Serialize(ISerializer serializer)
 		{
 			return serializer.BenchmarkSerialize(this);

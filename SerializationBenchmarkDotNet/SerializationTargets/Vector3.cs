@@ -62,6 +62,11 @@ namespace SerializationBenchmark
 			return "Vector3";
 		}
 
+		public string ToReadableString()
+		{
+			return $"Vector3: x:{x}, y: {y}, z:{z}";
+		}
+
 		public long Serialize(ISerializer serializer)
 		{
 			return serializer.BenchmarkSerialize(this);

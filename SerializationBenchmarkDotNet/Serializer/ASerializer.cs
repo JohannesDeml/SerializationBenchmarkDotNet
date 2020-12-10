@@ -78,6 +78,8 @@ namespace SerializationBenchmark
 		{
 			if (deserializationResults.TryGetValue(type, out ISerializationTarget result))
 			{
+				Console.WriteLine(original.ToReadableString());
+				Console.WriteLine(result.ToReadableString());
 				return EqualityComparer<ISerializationTarget>.Default.Equals(original, result);
 			}
 
@@ -86,8 +88,8 @@ namespace SerializationBenchmark
 		}
 
 		#region GenericSerialization
-		protected abstract TSerialization Serialize<T>(T original, out long messageSize);
-		protected abstract T Deserialize<T>(TSerialization serializedObject);
+		protected abstract TSerialization Serialize<T>(T original, out long messageSize) where T: ISerializationTarget;
+		protected abstract T Deserialize<T>(TSerialization serializedObject) where T: ISerializationTarget;
 		#endregion
 		
 		#region Non-GenericSerialization

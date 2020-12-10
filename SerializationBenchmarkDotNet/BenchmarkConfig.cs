@@ -10,6 +10,7 @@
 
 using System;
 using System.Globalization;
+using System.Linq;
 using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Diagnosers;
@@ -17,6 +18,7 @@ using BenchmarkDotNet.Environments;
 using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Exporters.Csv;
 using BenchmarkDotNet.Jobs;
+using BenchmarkDotNet.Parameters;
 using BenchmarkDotNet.Reports;
 using BenchmarkDotNet.Running;
 using Perfolizer.Horology;
@@ -102,9 +104,9 @@ namespace SerializationBenchmark
 			}
 
 			var paramInstances = benchmarkCase.Parameters;
-			instance.Serializer = (ISerializer) paramInstances[nameof(ISerializableBenchmark.Serializer)];
-			instance.Target = (ISerializationTarget) paramInstances[nameof(ISerializableBenchmark.Target)];
-			instance.Generic = (bool) paramInstances[nameof(ISerializableBenchmark.Generic)];
+			instance.Serializer = SetInstanceSave(instance.Serializer, paramInstances, nameof(instance.Serializer));
+			instance.Target = SetInstanceSave(instance.Target, paramInstances, nameof(instance.Target));
+			instance.Generic = SetInstanceSave(instance.Generic, paramInstances, nameof(instance.Generic));
 
 			instance.PrepareBenchmark();
 			var byteSize = instance.Serialize();
@@ -118,6 +120,18 @@ namespace SerializationBenchmark
 			return byteSize.ToString("0.##", cultureInfo);
 		}
 
+		private T SetInstanceSave<T>(T current, ParameterInstances instances, string name)
+		{
+			var instance = instances.Items.FirstOrDefault(item => item.Name == name);
+			if (instance == null)
+			{
+				Console.WriteLine($"Could not find parameter {name}");
+				return current;
+			}
+			
+			return (T) instance.Value;
+		}
+		
 		public bool IsAvailable(Summary summary)
 		{
 			return true;
