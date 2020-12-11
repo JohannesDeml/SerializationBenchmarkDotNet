@@ -36,10 +36,21 @@ namespace SerializationBenchmark
 			AddColumn(new DataSizeColumn());
 			AddColumn(FixedColumn.VersionColumn);
 			AddColumn(FixedColumn.OperatingSystemColumn);
+			
 			AddExporter(MarkdownExporter.GitHub);
-			var processableStyle = new SummaryStyle(CultureInfo.InvariantCulture, false, SizeUnit.B, TimeUnit.Nanosecond,
-				false, true, 100);
-			AddExporter(new CsvExporter(CsvSeparator.Comma, processableStyle));
+			AddExporter(new CsvExporter(CsvSeparator.Comma, ConfigConstants.CsvStyle));
 		}
+	}
+	
+	public static class ConfigConstants
+	{
+		/// <summary>
+		/// A summary style that makes processing of data more accessible.
+		/// * Long column width to avoid names being truncated
+		/// * units stay the same
+		/// * No units in cell data (Always numbers)
+		/// </summary>
+		public static readonly SummaryStyle CsvStyle = new SummaryStyle(CultureInfo.InvariantCulture, false, SizeUnit.B, TimeUnit.Millisecond,
+			false, true, 100);
 	}
 }
