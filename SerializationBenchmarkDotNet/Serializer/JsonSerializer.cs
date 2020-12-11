@@ -15,7 +15,7 @@ using Newtonsoft.Json;
 
 namespace SerializationBenchmark
 {
-	internal class JsonSerializer : ASerializer<MemoryStream>
+	internal class JsonSerializer : ADirectSerializer<MemoryStream>
 	{
 		private Newtonsoft.Json.JsonSerializer jsonSerializer;
 
@@ -38,7 +38,7 @@ namespace SerializationBenchmark
 			return stream;
 		}
 
-		protected override T Deserialize<T>(MemoryStream stream)
+		protected override ISerializationTarget Deserialize<T>(MemoryStream stream)
 		{
 			T copy = default(T);
 			stream.Position = 0;

@@ -13,7 +13,7 @@ using System.IO;
 
 namespace SerializationBenchmark
 {
-	internal class ProtobufNet : ASerializer<MemoryStream>
+	internal class ProtobufNet : ADirectSerializer<MemoryStream>
 	{
 		#region GenericSerialization
 		protected override MemoryStream Serialize<T>(T original, out long messageSize)
@@ -24,7 +24,7 @@ namespace SerializationBenchmark
 			return stream;
 		}
 
-		protected override T Deserialize<T>(MemoryStream stream)
+		protected override ISerializationTarget Deserialize<T>(MemoryStream stream)
 		{
 			T copy = default(T);
 			stream.Position = 0;

@@ -12,7 +12,7 @@ using System;
 
 namespace SerializationBenchmark
 {
-	internal class MsgPack : ASerializer<byte[]>
+	internal class MsgPack : ADirectSerializer<byte[]>
 	{
 		#region GenericSerialization
 		protected override byte[] Serialize<T>(T original, out long messageSize)
@@ -22,7 +22,7 @@ namespace SerializationBenchmark
 			return bytes;
 		}
 
-		protected override T Deserialize<T>(byte[] bytes)
+		protected override ISerializationTarget Deserialize<T>(byte[] bytes)
 		{
 			return global::MsgPack.Serialization.MessagePackSerializer.Get<T>().UnpackSingleObject(bytes);
 		}

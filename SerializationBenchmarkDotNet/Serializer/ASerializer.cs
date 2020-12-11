@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ATestTarget.cs">
+// <copyright file="ASerializer.cs">
 //   Copyright (c) 2020 Johannes Deml. All rights reserved.
 // </copyright>
 // <author>
@@ -10,7 +10,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SerializationBenchmark
 {
@@ -25,15 +24,15 @@ namespace SerializationBenchmark
 			ByteSize = byteSize;
 		}
 	}
-
-	public abstract class ASerializer<TSerialization>: ISerializer
+	
+	public abstract class ASerializer<TSerialization, TDeserialization>: ISerializer
 	{
 		private Dictionary<Type, SerializationResult<TSerialization>> serializationResults;
-		private Dictionary<Type, ISerializationTarget> deserializationResults;
+		protected Dictionary<Type, TDeserialization> deserializationResults;
 		protected ASerializer()
 		{
 			serializationResults = new Dictionary<Type, SerializationResult<TSerialization>>();
-			deserializationResults = new Dictionary<Type, ISerializationTarget>();
+			deserializationResults = new Dictionary<Type, TDeserialization>();
 		}
 
 		public long BenchmarkSerialize<T>(T original) where T: ISerializationTarget
@@ -87,19 +86,16 @@ namespace SerializationBenchmark
 			return false;
 		}
 
-		protected virtual bool GetResult(Type type, out ISerializationTarget result)
-		{
-			return deserializationResults.TryGetValue(type, out result);
-		}
+		protected abstract bool GetResult(Type type, out ISerializationTarget result);
 
 		#region GenericSerialization
 		protected abstract TSerialization Serialize<T>(T original, out long messageSize) where T: ISerializationTarget;
-		protected abstract T Deserialize<T>(TSerialization serializedObject) where T: ISerializationTarget;
+		protected abstract TDeserialization Deserialize<T>(TSerialization serializedObject) where T: ISerializationTarget;
 		#endregion
 		
 		#region Non-GenericSerialization
 		protected abstract TSerialization Serialize(Type type, ISerializationTarget original, out long messageSize);
-		protected abstract ISerializationTarget Deserialize(Type type, TSerialization serializedObject);
+		protected abstract TDeserialization Deserialize(Type type, TSerialization serializedObject);
 		#endregion
 
 		public virtual void Cleanup()

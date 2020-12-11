@@ -13,7 +13,7 @@ using MessagePack;
 
 namespace SerializationBenchmark
 {
-	internal class Lz4MessagePackCSharp : ASerializer<byte[]>
+	internal class Lz4MessagePackCSharp : ADirectSerializer<byte[]>
 	{
 		MessagePackSerializerOptions lz4Options;
 
@@ -30,7 +30,7 @@ namespace SerializationBenchmark
 			return bytes;
 		}
 
-		protected override T Deserialize<T>(byte[] bytes)
+		protected override ISerializationTarget Deserialize<T>(byte[] bytes)
 		{
 			return MessagePack.MessagePackSerializer.Deserialize<T>(bytes, lz4Options);
 		}

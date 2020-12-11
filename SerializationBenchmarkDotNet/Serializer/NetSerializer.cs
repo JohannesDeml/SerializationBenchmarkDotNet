@@ -15,7 +15,7 @@ using System.Linq;
 
 namespace SerializationBenchmark
 {
-	internal class NetSerializer : ASerializer<MemoryStream>
+	internal class NetSerializer : ADirectSerializer<MemoryStream>
 	{
 		private global::NetSerializer.Serializer netSerializer;
 
@@ -39,7 +39,7 @@ namespace SerializationBenchmark
 			return stream;
 		}
 
-		protected override T Deserialize<T>(MemoryStream stream)
+		protected override ISerializationTarget Deserialize<T>(MemoryStream stream)
 		{
 			T copy = default(T);
 			stream.Position = 0;

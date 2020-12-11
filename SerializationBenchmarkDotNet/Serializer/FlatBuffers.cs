@@ -14,14 +14,12 @@ using FlatBuffers;
 
 namespace SerializationBenchmark
 {
-	internal class FlatBuffers : ASerializer<byte[]>
+	internal class FlatBuffers : ASerializer<byte[], IFlatbufferObject>
 	{
-		private readonly Dictionary<Type, IFlatbufferObject> deserializationIntermediateResults;
 		private readonly FlatBufferBuilder builder;
 
 		public FlatBuffers()
 		{
-			deserializationIntermediateResults = new Dictionary<Type, IFlatbufferObject>();
 			builder = new FlatBufferBuilder(1);
 		}
 
@@ -30,9 +28,9 @@ namespace SerializationBenchmark
 			return Serialize(typeof(T), original, out messageSize);
 		}
 
-		protected override T Deserialize<T>(byte[] serializedObject)
+		protected override IFlatbufferObject Deserialize<T>(byte[] serializedObject)
 		{
-			return (T) Deserialize(typeof(T), serializedObject);
+			return (IFlatbufferObject) Deserialize(typeof(T), serializedObject);
 		}
 
 		protected override byte[] Serialize(Type type, ISerializationTarget original, out long messageSize)
@@ -80,22 +78,20 @@ namespace SerializationBenchmark
 			return builder.Offset;
 		}
 
-		protected override ISerializationTarget Deserialize(Type type, byte[] serializedObject)
+		protected override IFlatbufferObject Deserialize(Type type, byte[] serializedObject)
 		{
 			var buf = new ByteBuffer(serializedObject);
 
 			if (type == typeof(Vector3))
 			{
 				var vector3 = new FlatbufferObjects.Vector3().__assign(4, buf);
-				deserializationIntermediateResults[type] = vector3;
-				return new Vector3();
+				return vector3;
 			}
 
 			if (type == typeof(Person))
 			{
 				var person = FlatbufferObjects.Person.GetRootAsPerson(buf);
-				deserializationIntermediateResults[type] = person;
-				return null;
+				return person;
 			}
 
 			throw new NotImplementedException($"Deserialization for type {type} not implemented!");
@@ -103,7 +99,7 @@ namespace SerializationBenchmark
 
 		protected override bool GetResult(Type type, out ISerializationTarget result)
 		{
-			var intermediateResult = deserializationIntermediateResults[type];
+			var intermediateResult = deserializationResults[type];
 
 			if (type == typeof(Vector3))
 			{
