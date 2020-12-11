@@ -20,12 +20,10 @@ namespace SerializationBenchmark
 		public override IEnumerable<Job> GetJobs()
 			=> new[]
 			{
-				Job.Default
+				Job.InProcess
 					.RunOncePerIteration()
 					.WithGcServer(true)
 					.WithGcForce(false)
-					.WithRuntime(CoreRuntime.Core50)
-					.WithPlatform(Platform.X64)
 			};
 	}
 }

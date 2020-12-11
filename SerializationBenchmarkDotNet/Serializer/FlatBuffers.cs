@@ -42,8 +42,7 @@ namespace SerializationBenchmark
 				var vector3 = (Vector3) original;
 				FlatbufferObjects.Vector3.CreateVector3(builder, vector3.x, vector3.y, vector3.z);
 				
-				var buffer = builder.DataBuffer;
-				messageSize = buffer.Length - buffer.Position;
+				messageSize = GetSize();
 				
 				var byteArray = builder.SizedByteArray();
 				builder.Clear();
@@ -64,8 +63,7 @@ namespace SerializationBenchmark
 				var flatBufferPerson = FlatbufferObjects.Person.EndPerson(builder);
 				builder.Finish(flatBufferPerson.Value);
 				
-				var buffer = builder.DataBuffer;
-				messageSize = buffer.Length - buffer.Position;
+				messageSize = GetSize();
 				
 				var byteArray = builder.SizedByteArray();
 				builder.Clear();
@@ -73,6 +71,13 @@ namespace SerializationBenchmark
 			}
 
 			throw new NotImplementedException($"Serialization for type {type} not implemented!");
+		}
+
+		private int GetSize()
+		{
+			// Suggested calculation: buf.Length - buf.Position results in the buffer array size, not the actual size
+			// I think offset can be used to get the correct value, since we're clearing the builder every time
+			return builder.Offset;
 		}
 
 		protected override ISerializationTarget Deserialize(Type type, byte[] serializedObject)
