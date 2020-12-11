@@ -23,7 +23,7 @@ namespace SerializationBenchmark
 			BenchmarkRunner.Run<Benchmark>(new DebugBenchmarkConfig());
 			#else
 			Console.WriteLine("Run Serialization Benchmark");
-			BenchmarkRunner.Run<Benchmark>();
+			BenchmarkRunner.Run<Benchmark>(new BenchmarkConfig());
 			#endif
 		}
 	}

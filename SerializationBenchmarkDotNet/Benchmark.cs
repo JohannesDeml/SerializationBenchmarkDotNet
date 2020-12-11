@@ -14,7 +14,6 @@ using BenchmarkDotNet.Attributes;
 
 namespace SerializationBenchmark
 {
-	[Config(typeof(BenchmarkConfig))]
 	public class Benchmark : ISerializableBenchmark
 	{
 		[ParamsSource(nameof(Serializers))]
