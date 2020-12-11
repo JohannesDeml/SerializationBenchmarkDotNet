@@ -36,6 +36,7 @@ namespace SerializationBenchmark
 			AddColumn(new DataSizeColumn());
 			AddColumn(FixedColumn.VersionColumn);
 			AddColumn(FixedColumn.OperatingSystemColumn);
+			AddColumn(FixedColumn.DateTimeColumn);
 			
 			AddExporter(MarkdownExporter.GitHub);
 			AddExporter(new CsvExporter(CsvSeparator.Comma, ConfigConstants.CsvStyle));

@@ -8,6 +8,8 @@
 // </author>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
+using System.Globalization;
 using System.Reflection;
 using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Reports;
@@ -33,6 +35,13 @@ namespace SerializationBenchmark
 		/// </summary>
 		public static readonly FixedColumn OperatingSystemColumn =
 			new FixedColumn("OS", System.Runtime.InteropServices.RuntimeInformation.OSDescription);
+		
+		/// <summary>
+		/// Column with the current date and time in an invariant culture format
+		/// </summary>
+		public static readonly FixedColumn DateTimeColumn =
+			new FixedColumn("DateTime", DateTime.Now.ToString(CultureInfo.InvariantCulture));
+		
 		public string Id { get; }
 		public string ColumnName { get; }
 		
