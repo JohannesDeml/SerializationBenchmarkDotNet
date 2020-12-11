@@ -30,6 +30,7 @@ namespace SerializationBenchmark
 			Add(DefaultConfig.Instance);
 
 			AddJob(Job.Default
+				.WithUnrollFactor(8)
 				.WithGcServer(true)
 				.WithGcForce(false)
 				.WithRuntime(CoreRuntime.Core50)
@@ -37,10 +38,9 @@ namespace SerializationBenchmark
 
 			AddColumn(new DataSizeColumn());
 			AddExporter(MarkdownExporter.GitHub);
-			var processableStyle = new SummaryStyle(CultureInfo.InvariantCulture, false, SizeUnit.KB, TimeUnit.Nanosecond,
+			var processableStyle = new SummaryStyle(CultureInfo.InvariantCulture, false, SizeUnit.B, TimeUnit.Nanosecond,
 				false, true, 100);
 			AddExporter(new CsvExporter(CsvSeparator.Comma, processableStyle));
-			AddDiagnoser(MemoryDiagnoser.Default);
 		}
 	}
 }

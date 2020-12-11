@@ -28,11 +28,11 @@ namespace SerializationBenchmark
 		public IEnumerable<ISerializer> Serializers => new ISerializer[]
 		{
 			new FlatBuffers(),
-			new MessagePackCSharp(),
-			new Lz4MessagePackCSharp(),
-			new NetSerializer(),
-			new MsgPack(),
 			new JsonSerializer(),
+			new Lz4MessagePackCSharp(),
+			new MessagePackCSharp(),
+			new MsgPack(),
+			new NetSerializer(),
 			new ProtobufNet(),
 		};
 
