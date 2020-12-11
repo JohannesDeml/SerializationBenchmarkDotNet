@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerializationBenchmarkDotNe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlatBuffers", "FlatBuffers\FlatBuffers.csproj", "{E0623AE5-093C-461A-A2B5-7FCB51C3D1D2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BitPacker", "BitPacker\BitPacker.csproj", "{36D2D699-8A65-4806-81E8-3EFF7FD1FEE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{E0623AE5-093C-461A-A2B5-7FCB51C3D1D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0623AE5-093C-461A-A2B5-7FCB51C3D1D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0623AE5-093C-461A-A2B5-7FCB51C3D1D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36D2D699-8A65-4806-81E8-3EFF7FD1FEE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36D2D699-8A65-4806-81E8-3EFF7FD1FEE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36D2D699-8A65-4806-81E8-3EFF7FD1FEE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36D2D699-8A65-4806-81E8-3EFF7FD1FEE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

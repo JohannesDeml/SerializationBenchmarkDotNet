@@ -10,6 +10,7 @@
 
 using System;
 using System.Runtime.Serialization;
+using emotitron.Compression;
 using MessagePack;
 using MsgPack.Serialization;
 using ProtoBuf;
@@ -75,6 +76,24 @@ namespace SerializationBenchmark
 		public long Deserialize(ISerializer serializer)
 		{
 			return serializer.BenchmarkDeserialize(this);
+		}
+
+		public long Serialize(ref byte[] target)
+		{
+			var pos = 0;
+			target.WriteFloat(x, ref pos);
+			target.WriteFloat(y, ref pos);
+			target.WriteFloat(z, ref pos);
+			return pos;
+		}
+
+		public long Deserialize(ref byte[] target)
+		{
+			var pos = 0;
+			x = target.ReadFloat(ref pos);
+			y = target.ReadFloat(ref pos);
+			z = target.ReadFloat(ref pos);
+			return pos;
 		}
 	}
 }

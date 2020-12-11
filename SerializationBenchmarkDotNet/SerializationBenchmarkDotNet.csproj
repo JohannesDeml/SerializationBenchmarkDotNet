@@ -20,6 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\BitPacker\BitPacker.csproj" />
       <ProjectReference Include="..\FlatBuffers\FlatBuffers.csproj" />
     </ItemGroup>
 

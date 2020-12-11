@@ -77,8 +77,8 @@ namespace SerializationBenchmark
 		{
 			if (GetResult(type, out ISerializationTarget result))
 			{
-				// Console.WriteLine(original.ToReadableString());
-				// Console.WriteLine(result.ToReadableString());
+				Console.WriteLine(original.ToReadableString());
+				Console.WriteLine(result.ToReadableString());
 				return EqualityComparer<ISerializationTarget>.Default.Equals(original, result);
 			}
 

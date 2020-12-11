@@ -17,6 +17,8 @@ namespace SerializationBenchmark
 		Type GetType();
 		long Serialize(ISerializer serializer);
 		long Deserialize(ISerializer serializer);
+		long Serialize(ref byte[] target);
+		long Deserialize(ref byte[] target);
 		string ToReadableString();
 	}
 }

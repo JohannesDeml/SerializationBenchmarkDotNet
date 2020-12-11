@@ -27,6 +27,7 @@ namespace SerializationBenchmark
 		
 		public IEnumerable<ISerializer> Serializers => new ISerializer[]
 		{
+			new BitPacker(),
 			new FlatBuffers(),
 			new JsonSerializer(),
 			new Lz4MessagePackCSharp(),

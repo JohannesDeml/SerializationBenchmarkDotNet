@@ -10,7 +10,9 @@
 
 using System;
 using System.Runtime.Serialization;
+using emotitron.Compression;
 using MessagePack;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MsgPack.Serialization;
 using ProtoBuf;
 
@@ -86,6 +88,43 @@ namespace SerializationBenchmark
 		public long Deserialize(ISerializer serializer)
 		{
 			return serializer.BenchmarkDeserialize(this);
+		}
+
+		public long Serialize(ref byte[] target)
+		{
+			var pos = 0;
+			target.Write((ByteConverter)Age, ref pos, 8);
+			WriteString(target, FirstName, 20, ref pos);
+			WriteString(target, LastName, 20, ref pos);
+			target.Write((ByteConverter)(sbyte)Sex, ref pos, 8);
+			return pos;
+		}
+
+		private void WriteString(byte[] target, string value, int maxLength, ref int pos)
+		{
+			var bytePos = pos / 8;
+			var stringBytes = System.Text.Encoding.ASCII.GetBytes(value, 0, Math.Min(maxLength, value.Length));
+			stringBytes.CopyTo(target, bytePos);
+			pos += maxLength * 8;
+		}
+
+		public long Deserialize(ref byte[] target)
+		{
+			var pos = 0;
+			Age = (int)target.Read(ref pos, 8);
+			FirstName = ReadString(target, 20, ref pos);
+			LastName = ReadString(target, 20, ref pos);
+			Sex = (Sex) target.Read(ref pos, 8);
+			return pos;
+		}
+		
+		private string ReadString(byte[] target, int maxLength, ref int pos)
+		{
+			var bytePos = pos / 8;
+			var stringValue = System.Text.Encoding.ASCII.GetString(target, bytePos, maxLength);
+			pos += maxLength * 8;
+			var sanitizedString = stringValue.Trim((char)0x00);
+			return sanitizedString;
 		}
 	}
 }
