@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BitPacker.cs">
+// <copyright file="ManualBitPacking.cs">
 //   Copyright (c) 2020 Johannes Deml. All rights reserved.
 // </copyright>
 // <author>
@@ -12,9 +12,10 @@ using System;
 
 namespace SerializationBenchmark
 {
-	internal class BitPacker : ADirectSerializer<byte[]>
+	internal class ManualBitPacking : ADirectSerializer<byte[]>
 	{
 		#region GenericSerialization
+
 		protected override byte[] Serialize<T>(T original, out long messageSize)
 		{
 			var bytes = new byte[128];
@@ -28,9 +29,11 @@ namespace SerializationBenchmark
 			instance.Deserialize(ref bytes);
 			return instance;
 		}
+
 		#endregion
-		
+
 		#region Non-GenericSerialization
+
 		protected override byte[] Serialize(Type type, ISerializationTarget original, out long messageSize)
 		{
 			var bytes = new byte[128];
@@ -44,6 +47,7 @@ namespace SerializationBenchmark
 			instance.Deserialize(ref bytes);
 			return instance;
 		}
+
 		#endregion
 
 		public override string ToString()
