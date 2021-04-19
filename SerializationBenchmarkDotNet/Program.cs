@@ -13,11 +13,10 @@ using BenchmarkDotNet.Running;
 
 namespace SerializationBenchmark
 {
-	class Program
+	public static class Program
 	{
-		static void Main(string[] args)
+		public static void Main(string[] args)
 		{
-			
 			#if DEBUG
 			Console.WriteLine("Debug Serialization Benchmark - Use Release setup for actual benchmarking!");
 			BenchmarkRunner.Run<Benchmark>(new DebugBenchmarkConfig());
