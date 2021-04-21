@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <RootNamespace>emotitron.Compression</RootNamespace>
-        <TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
+        <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
 </Project>
