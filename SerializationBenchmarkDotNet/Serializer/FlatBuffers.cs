@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="FlatBuffer.cs">
+// <copyright file="FlatBuffers.cs">
 //   Copyright (c) 2020 Johannes Deml. All rights reserved.
 // </copyright>
 // <author>
@@ -9,7 +9,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using FlatBuffers;
 
 namespace SerializationBenchmark
@@ -39,9 +38,9 @@ namespace SerializationBenchmark
 			{
 				var vector3 = (Vector3) original;
 				FlatbufferObjects.Vector3.CreateVector3(builder, vector3.x, vector3.y, vector3.z);
-				
+
 				messageSize = GetSize();
-				
+
 				var byteArray = builder.SizedByteArray();
 				builder.Clear();
 				return byteArray;
@@ -52,17 +51,17 @@ namespace SerializationBenchmark
 				var person = (Person) original;
 				var firstNameOffset = builder.CreateString(person.FirstName);
 				var lastNameOffset = builder.CreateString(person.LastName);
-				
+
 				FlatbufferObjects.Person.StartPerson(builder);
 				FlatbufferObjects.Person.AddAge(builder, person.Age);
 				FlatbufferObjects.Person.AddFirstName(builder, firstNameOffset);
 				FlatbufferObjects.Person.AddLastName(builder, lastNameOffset);
-				FlatbufferObjects.Person.AddSex(builder, (FlatbufferObjects.Sex)person.Sex);
+				FlatbufferObjects.Person.AddSex(builder, (FlatbufferObjects.Sex) person.Sex);
 				var flatBufferPerson = FlatbufferObjects.Person.EndPerson(builder);
 				builder.Finish(flatBufferPerson.Value);
-				
+
 				messageSize = GetSize();
-				
+
 				var byteArray = builder.SizedByteArray();
 				builder.Clear();
 				return byteArray;
@@ -107,7 +106,7 @@ namespace SerializationBenchmark
 				result = new Vector3(vector3.X, vector3.Y, vector3.Z);
 				return true;
 			}
-			
+
 			if (type == typeof(Person))
 			{
 				var person = (FlatbufferObjects.Person) intermediateResult;

@@ -19,6 +19,7 @@ namespace SerializationBenchmark
 	internal class Overhead : ADirectSerializer<ISerializationTarget>
 	{
 		#region GenericSerialization
+
 		protected override ISerializationTarget Serialize<T>(T original, out long messageSize)
 		{
 			messageSize = 0;
@@ -29,9 +30,11 @@ namespace SerializationBenchmark
 		{
 			return original;
 		}
+
 		#endregion
-		
+
 		#region Non-GenericSerialization
+
 		protected override ISerializationTarget Serialize(Type type, ISerializationTarget original, out long messageSize)
 		{
 			messageSize = 0;
@@ -42,6 +45,7 @@ namespace SerializationBenchmark
 		{
 			return original;
 		}
+
 		#endregion
 
 		public override string ToString()

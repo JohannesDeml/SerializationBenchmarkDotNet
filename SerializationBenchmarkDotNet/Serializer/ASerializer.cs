@@ -24,18 +24,19 @@ namespace SerializationBenchmark
 			ByteSize = byteSize;
 		}
 	}
-	
-	public abstract class ASerializer<TSerialization, TDeserialization>: ISerializer
+
+	public abstract class ASerializer<TSerialization, TDeserialization> : ISerializer
 	{
 		private Dictionary<Type, SerializationResult<TSerialization>> serializationResults;
 		protected Dictionary<Type, TDeserialization> deserializationResults;
+
 		protected ASerializer()
 		{
 			serializationResults = new Dictionary<Type, SerializationResult<TSerialization>>();
 			deserializationResults = new Dictionary<Type, TDeserialization>();
 		}
 
-		public long BenchmarkSerialize<T>(T original) where T: ISerializationTarget
+		public long BenchmarkSerialize<T>(T original) where T : ISerializationTarget
 		{
 			var result = Serialize(original, out long messageSize);
 			serializationResults[typeof(T)] = new SerializationResult<TSerialization>(result, messageSize);
@@ -49,7 +50,7 @@ namespace SerializationBenchmark
 			return messageSize;
 		}
 
-		public long BenchmarkDeserialize<T>(T original) where T: ISerializationTarget
+		public long BenchmarkDeserialize<T>(T original) where T : ISerializationTarget
 		{
 			var type = typeof(T);
 			var target = serializationResults[type];
@@ -72,7 +73,7 @@ namespace SerializationBenchmark
 		{
 			return Validate(typeof(T), original);
 		}
-		
+
 		public bool Validate(Type type, ISerializationTarget original)
 		{
 			if (GetResult(type, out ISerializationTarget result))
@@ -87,13 +88,17 @@ namespace SerializationBenchmark
 		protected abstract bool GetResult(Type type, out ISerializationTarget result);
 
 		#region GenericSerialization
-		protected abstract TSerialization Serialize<T>(T original, out long messageSize) where T: ISerializationTarget;
-		protected abstract TDeserialization Deserialize<T>(TSerialization serializedObject) where T: ISerializationTarget;
+
+		protected abstract TSerialization Serialize<T>(T original, out long messageSize) where T : ISerializationTarget;
+		protected abstract TDeserialization Deserialize<T>(TSerialization serializedObject) where T : ISerializationTarget;
+
 		#endregion
-		
+
 		#region Non-GenericSerialization
+
 		protected abstract TSerialization Serialize(Type type, ISerializationTarget original, out long messageSize);
 		protected abstract TDeserialization Deserialize(Type type, TSerialization serializedObject);
+
 		#endregion
 
 		public virtual void Cleanup()

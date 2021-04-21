@@ -92,10 +92,10 @@ namespace SerializationBenchmark
 				Console.WriteLine($"{nameof(DataSizeColumn)}: Could not find parameter {name} - skipping instance value change");
 				return current;
 			}
-			
+
 			return (T) instance.Value;
 		}
-		
+
 		public bool IsAvailable(Summary summary)
 		{
 			return true;

@@ -72,7 +72,7 @@ namespace SerializationBenchmark
 		{
 			return serializer.BenchmarkSerialize(this);
 		}
-		
+
 		public long Deserialize(ISerializer serializer)
 		{
 			return serializer.BenchmarkDeserialize(this);

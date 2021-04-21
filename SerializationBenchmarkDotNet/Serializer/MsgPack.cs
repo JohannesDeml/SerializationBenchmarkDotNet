@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MsgPackTarget.cs">
+// <copyright file="MsgPack.cs">
 //   Copyright (c) 2020 Johannes Deml. All rights reserved.
 // </copyright>
 // <author>
@@ -15,6 +15,7 @@ namespace SerializationBenchmark
 	internal class MsgPack : ADirectSerializer<byte[]>
 	{
 		#region GenericSerialization
+
 		protected override byte[] Serialize<T>(T original, out long messageSize)
 		{
 			var bytes = global::MsgPack.Serialization.MessagePackSerializer.Get<T>().PackSingleObject(original);
@@ -26,9 +27,11 @@ namespace SerializationBenchmark
 		{
 			return global::MsgPack.Serialization.MessagePackSerializer.Get<T>().UnpackSingleObject(bytes);
 		}
+
 		#endregion
-		
+
 		#region Non-GenericSerialization
+
 		protected override byte[] Serialize(Type type, ISerializationTarget original, out long messageSize)
 		{
 			var bytes = global::MsgPack.Serialization.MessagePackSerializer.Get(type).PackSingleObject(original);
@@ -40,6 +43,7 @@ namespace SerializationBenchmark
 		{
 			return (ISerializationTarget) global::MsgPack.Serialization.MessagePackSerializer.Get(type).UnpackSingleObject(bytes);
 		}
+
 		#endregion
 
 		public override string ToString()

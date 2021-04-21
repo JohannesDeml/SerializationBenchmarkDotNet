@@ -12,7 +12,6 @@ using System;
 using System.Runtime.Serialization;
 using emotitron.Compression;
 using MessagePack;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MsgPack.Serialization;
 using ProtoBuf;
 
@@ -24,7 +23,7 @@ namespace SerializationBenchmark
 		Male,
 		Female,
 	}
-	
+
 	[Serializable]
 	[ProtoContract]
 	[DataContract]
@@ -54,7 +53,7 @@ namespace SerializationBenchmark
 		[ProtoMember(4)]
 		[DataMember]
 		public virtual Sex Sex { get; set; }
-		
+
 		public bool Equals(Person other)
 		{
 			if (ReferenceEquals(null, other)) return false;
@@ -84,7 +83,7 @@ namespace SerializationBenchmark
 		{
 			return serializer.BenchmarkSerialize(this);
 		}
-		
+
 		public long Deserialize(ISerializer serializer)
 		{
 			return serializer.BenchmarkDeserialize(this);
@@ -93,10 +92,10 @@ namespace SerializationBenchmark
 		public long Serialize(ref byte[] target)
 		{
 			var pos = 0;
-			target.Write((ByteConverter)Age, ref pos, 8);
+			target.Write((ByteConverter) Age, ref pos, 8);
 			WriteString(target, FirstName, 20, ref pos);
 			WriteString(target, LastName, 20, ref pos);
-			target.Write((ByteConverter)(sbyte)Sex, ref pos, 8);
+			target.Write((ByteConverter) (sbyte) Sex, ref pos, 8);
 			return pos;
 		}
 
@@ -111,19 +110,19 @@ namespace SerializationBenchmark
 		public long Deserialize(ref byte[] target)
 		{
 			var pos = 0;
-			Age = (int)target.Read(ref pos, 8);
+			Age = (int) target.Read(ref pos, 8);
 			FirstName = ReadString(target, 20, ref pos);
 			LastName = ReadString(target, 20, ref pos);
 			Sex = (Sex) target.Read(ref pos, 8);
 			return pos;
 		}
-		
+
 		private string ReadString(byte[] target, int maxLength, ref int pos)
 		{
 			var bytePos = pos / 8;
 			var stringValue = System.Text.Encoding.ASCII.GetString(target, bytePos, maxLength);
 			pos += maxLength * 8;
-			var sanitizedString = stringValue.Trim((char)0x00);
+			var sanitizedString = stringValue.Trim((char) 0x00);
 			return sanitizedString;
 		}
 	}

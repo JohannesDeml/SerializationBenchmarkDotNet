@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="JsonSerializerTarget.cs">
+// <copyright file="JsonSerializer.cs">
 //   Copyright (c) 2020 Johannes Deml. All rights reserved.
 // </copyright>
 // <author>
@@ -25,6 +25,7 @@ namespace SerializationBenchmark
 		}
 
 		#region GenericSerialization
+
 		protected override MemoryStream Serialize<T>(T original, out long messageSize)
 		{
 			var stream = new MemoryStream();
@@ -50,9 +51,11 @@ namespace SerializationBenchmark
 
 			return copy;
 		}
+
 		#endregion
-		
+
 		#region Non-GenericSerialization
+
 		protected override MemoryStream Serialize(Type type, ISerializationTarget original, out long messageSize)
 		{
 			var stream = new MemoryStream();
@@ -78,6 +81,7 @@ namespace SerializationBenchmark
 
 			return (ISerializationTarget) copy;
 		}
+
 		#endregion
 
 		public override string ToString()

@@ -35,16 +35,16 @@ namespace SerializationBenchmark
 		/// </summary>
 		public static readonly FixedColumn OperatingSystemColumn =
 			new FixedColumn("OS", System.Runtime.InteropServices.RuntimeInformation.OSDescription);
-		
+
 		/// <summary>
 		/// Column with the current date and time in an invariant culture format
 		/// </summary>
 		public static readonly FixedColumn DateTimeColumn =
 			new FixedColumn("DateTime", DateTime.Now.ToString(CultureInfo.InvariantCulture));
-		
+
 		public string Id { get; }
 		public string ColumnName { get; }
-		
+
 		private readonly string cellValue;
 
 		public FixedColumn(string columnName, string cellValue)
@@ -58,10 +58,10 @@ namespace SerializationBenchmark
 		public string GetValue(Summary summary, BenchmarkCase benchmarkCase) => cellValue;
 
 		public bool IsAvailable(Summary summary) => true;
-		
+
 		public bool AlwaysShow { get; set; } = false;
 		public ColumnCategory Category => ColumnCategory.Custom;
-		public int PriorityInCategory { get; set; } =  0;
+		public int PriorityInCategory { get; set; } = 0;
 		public bool IsNumeric => false;
 		public UnitType UnitType => UnitType.Dimensionless;
 		public string Legend => $"Fixed column with value {cellValue}";

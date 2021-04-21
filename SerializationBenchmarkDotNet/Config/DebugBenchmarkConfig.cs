@@ -10,7 +10,6 @@
 
 using System.Collections.Generic;
 using BenchmarkDotNet.Configs;
-using BenchmarkDotNet.Environments;
 using BenchmarkDotNet.Jobs;
 
 namespace SerializationBenchmark

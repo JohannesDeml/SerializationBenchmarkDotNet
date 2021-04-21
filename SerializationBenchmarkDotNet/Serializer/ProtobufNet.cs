@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ProtobufNetTarget.cs">
+// <copyright file="ProtobufNet.cs">
 //   Copyright (c) 2020 Johannes Deml. All rights reserved.
 // </copyright>
 // <author>
@@ -16,6 +16,7 @@ namespace SerializationBenchmark
 	internal class ProtobufNet : ADirectSerializer<MemoryStream>
 	{
 		#region GenericSerialization
+
 		protected override MemoryStream Serialize<T>(T original, out long messageSize)
 		{
 			var stream = new MemoryStream();
@@ -31,9 +32,11 @@ namespace SerializationBenchmark
 			copy = ProtoBuf.Serializer.Deserialize<T>(stream);
 			return copy;
 		}
+
 		#endregion
-		
+
 		#region Non-GenericSerialization
+
 		protected override MemoryStream Serialize(Type type, ISerializationTarget original, out long messageSize)
 		{
 			var stream = new MemoryStream();
@@ -49,6 +52,7 @@ namespace SerializationBenchmark
 			copy = ProtoBuf.Serializer.Deserialize(type, stream);
 			return (ISerializationTarget) copy;
 		}
+
 		#endregion
 
 		public override string ToString()

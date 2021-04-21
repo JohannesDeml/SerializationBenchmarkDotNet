@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Lz4MessagePackCSharpTarget.cs">
+// <copyright file="Lz4MessagePackCSharp.cs">
 //   Copyright (c) 2020 Johannes Deml. All rights reserved.
 // </copyright>
 // <author>
@@ -23,6 +23,7 @@ namespace SerializationBenchmark
 		}
 
 		#region GenericSerialization
+
 		protected override byte[] Serialize<T>(T original, out long messageSize)
 		{
 			var bytes = MessagePack.MessagePackSerializer.Serialize(original, lz4Options);
@@ -34,9 +35,11 @@ namespace SerializationBenchmark
 		{
 			return MessagePack.MessagePackSerializer.Deserialize<T>(bytes, lz4Options);
 		}
+
 		#endregion
-		
+
 		#region Non-GenericSerialization
+
 		protected override byte[] Serialize(Type type, ISerializationTarget original, out long messageSize)
 		{
 			var bytes = MessagePack.MessagePackSerializer.Serialize(type, original, lz4Options);
@@ -48,6 +51,7 @@ namespace SerializationBenchmark
 		{
 			return (ISerializationTarget) MessagePack.MessagePackSerializer.Deserialize(type, bytes, lz4Options);
 		}
+
 		#endregion
 
 		public override string ToString()
