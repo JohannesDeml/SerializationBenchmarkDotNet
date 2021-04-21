@@ -11,6 +11,7 @@
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Environments;
 using BenchmarkDotNet.Jobs;
+using Perfolizer.Horology;
 
 namespace SerializationBenchmark
 {
@@ -22,6 +23,10 @@ namespace SerializationBenchmark
 
 			AddJob(Job.Default
 				.WithUnrollFactor(8)
+				.WithWarmupCount(3)
+				.WithIterationTime(TimeInterval.FromMilliseconds(250))
+				.WithMinIterationCount(15)
+				.WithMaxIterationCount(20)
 				.WithGcServer(true)
 				.WithGcConcurrent(true)
 				.WithGcForce(false)
