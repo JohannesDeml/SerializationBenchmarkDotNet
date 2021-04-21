@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Benchmark.cs">
+// <copyright file="SerializationBenchmark.cs">
 //   Copyright (c) 2020 Johannes Deml. All rights reserved.
 // </copyright>
 // <author>
@@ -14,7 +14,7 @@ using BenchmarkDotNet.Attributes;
 
 namespace SerializationBenchmark
 {
-	public class Benchmark : ISerializableBenchmark
+	public class SerializationBenchmark : ISerializableBenchmark
 	{
 		[ParamsSource(nameof(Serializers))]
 		public ISerializer Serializer { get; set; }
@@ -24,7 +24,7 @@ namespace SerializationBenchmark
 
 		//[ParamsAllValues]
 		public bool Generic { get; set; } = true;
-		
+
 		public IEnumerable<ISerializer> Serializers => new ISerializer[]
 		{
 			new Overhead(),
@@ -48,7 +48,7 @@ namespace SerializationBenchmark
 		public void PrepareBenchmark()
 		{
 		}
-		
+
 		[GlobalSetup(Target = nameof(Deserialize))]
 		public void PrepareDeserializeBenchmark()
 		{
@@ -72,7 +72,7 @@ namespace SerializationBenchmark
 
 			return size;
 		}
-		
+
 		[Benchmark]
 		public long Deserialize()
 		{
@@ -100,7 +100,7 @@ namespace SerializationBenchmark
 		{
 			Serializer.Cleanup();
 		}
-		
+
 		private void Validate(Type type, ISerializationTarget original)
 		{
 			bool valid = Serializer.Validate(type, original);
