@@ -1,5 +1,5 @@
 # .NET CI for Shell runner supporting submodules
-# Continuous integration for BenchmarkDotNet
+# Continuous integration for SerializationBenchmarkDotNet
 
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
@@ -7,7 +7,8 @@ variables:
   BENCHMARK_PROJECT_PATH: './$BENCHMARK_NAME/$BENCHMARK_NAME.csproj'
   BENCHMARK_FOLDER: './bin/$BENCHMARK_NAME'
   BENCHMARK_STORE_FOLDER: '/home/gitlab-runner/benchmarks/$BENCHMARK_NAME'
-  
+  SYSTEM_TAG: 'Ubuntu VPS'
+
 stages:
   - benchmark
 
@@ -20,10 +21,14 @@ benchmark_job:
     # Build benchmarks
     - dotnet restore $BENCHMARK_PROJECT_PATH
     - dotnet build $BENCHMARK_PROJECT_PATH --framework net5.0 --configuration Release --no-restore --output $BENCHMARK_FOLDER
-    
+
     # Run the benchmarks
     - $BENCHMARK_FOLDER/$BENCHMARK_NAME
-    
+
+    # Store running processes
+    - ps -aux > ./BenchmarkDotNet.Artifacts/running-processes.txt
+    - ps -e -o %p, -o lstart -o ,%C, -o %mem -o ,%c > ./BenchmarkDotNet.Artifacts/running-processes.csv
+
     # Store results on server
     - if [ ! -d $BENCHMARK_STORE_FOLDER ] ; then
     - mkdir $BENCHMARK_STORE_FOLDER
@@ -32,6 +37,9 @@ benchmark_job:
     - targetfolder=$BENCHMARK_STORE_FOLDER/${datetime_string}--$CI_COMMIT_SHORT_SHA
     - mkdir ${targetfolder}
     - cp -R ./BenchmarkDotNet.Artifacts/* ${targetfolder}/
+
+    # Rename folder
+    - mv ./BenchmarkDotNet.Artifacts ./UbuntuVPS
   artifacts:
     paths:
-      - ./BenchmarkDotNet.Artifacts
+      - ./UbuntuVPS
