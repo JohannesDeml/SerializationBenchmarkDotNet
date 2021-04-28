@@ -11,6 +11,7 @@
 using System;
 using System.Runtime.Serialization;
 using emotitron.Compression;
+using Google.Protobuf;
 using MessagePack;
 using MsgPack.Serialization;
 using ProtoBuf;
@@ -41,11 +42,15 @@ namespace SerializationBenchmark
 		[DataMember]
 		public float z;
 
+		[NonSerialized]
+		private IMessage<ProtobufObjects.Vector3> protobufObject;
+		
 		public Vector3(float x, float y, float z)
 		{
 			this.x = x;
 			this.y = y;
 			this.z = z;
+			this.protobufObject = null;
 		}
 
 		public bool Equals(Vector3 other)
@@ -66,6 +71,21 @@ namespace SerializationBenchmark
 		public string ToReadableString()
 		{
 			return $"Vector3: x:{x}, y: {y}, z:{z}";
+		}
+
+		public void GenerateProtobufMessage()
+		{
+			protobufObject = new ProtobufObjects.Vector3()
+			{
+				X = x,
+				Y = y,
+				Z = z
+			};
+		}
+
+		public IMessage GetProtobufMessage()
+		{
+			return protobufObject;
 		}
 
 		public long Serialize(ISerializer serializer)

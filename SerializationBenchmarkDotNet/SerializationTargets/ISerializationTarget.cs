@@ -9,6 +9,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System;
+using Google.Protobuf;
 
 namespace SerializationBenchmark
 {
@@ -20,5 +21,8 @@ namespace SerializationBenchmark
 		long Serialize(ref byte[] target);
 		long Deserialize(ref byte[] target);
 		string ToReadableString();
+
+		void GenerateProtobufMessage();
+		IMessage GetProtobufMessage();
 	}
 }

@@ -30,12 +30,13 @@ namespace SerializationBenchmark
 			new Overhead(),
 			new ManualBitPacking(),
 			new FlatBuffers(),
-			new JsonSerializer(),
+			new NewtonsoftJson(),
 			new Lz4MessagePackCSharp(),
 			new MessagePackCSharp(),
 			new MsgPack(),
 			new NetSerializer(),
 			new ProtobufNet(),
+			new Protobuf(),
 		};
 
 		public IEnumerable<ISerializationTarget> Targets => new ISerializationTarget[]
@@ -44,9 +45,10 @@ namespace SerializationBenchmark
 			new Vector3(12.345f, 987.654f, 1.3f)
 		};
 
-		[GlobalSetup]
+		[GlobalSetup(Target = nameof(Serialize))]
 		public void PrepareBenchmark()
 		{
+			Target.GenerateProtobufMessage();
 		}
 
 		[GlobalSetup(Target = nameof(Deserialize))]

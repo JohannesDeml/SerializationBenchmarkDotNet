@@ -11,6 +11,7 @@
 using System;
 using System.Runtime.Serialization;
 using emotitron.Compression;
+using Google.Protobuf;
 using MessagePack;
 using MsgPack.Serialization;
 using ProtoBuf;
@@ -54,6 +55,9 @@ namespace SerializationBenchmark
 		[DataMember]
 		public virtual Sex Sex { get; set; }
 
+		[NonSerialized]
+		private IMessage<ProtobufObjects.Person> protobufObject;
+		
 		public bool Equals(Person other)
 		{
 			if (ReferenceEquals(null, other)) return false;
@@ -77,6 +81,22 @@ namespace SerializationBenchmark
 		public string ToReadableString()
 		{
 			return $"Person Age: {Age}, FirstName: {FirstName}, LastName: {LastName}, Sex: {Sex}";
+		}
+
+		public void GenerateProtobufMessage()
+		{
+			protobufObject = new ProtobufObjects.Person()
+			{
+				Age = Age,
+				FirstName = FirstName,
+				LastName = LastName,
+				Sex = (ProtobufObjects.Person.Types.Sex) Sex
+			};
+		}
+
+		public IMessage GetProtobufMessage()
+		{
+			return protobufObject;
 		}
 
 		public long Serialize(ISerializer serializer)
