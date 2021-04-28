@@ -121,10 +121,13 @@ namespace SerializationBenchmark
 
 		private void WriteString(byte[] target, string value, int maxLength, ref int pos)
 		{
+			var length = Math.Min(value.Length, maxLength);
+			target.Write((ByteConverter) length, ref pos, 8);
+			
 			var bytePos = pos / 8;
-			var stringBytes = System.Text.Encoding.ASCII.GetBytes(value, 0, Math.Min(maxLength, value.Length));
+			var stringBytes = System.Text.Encoding.ASCII.GetBytes(value, 0,  length);
 			stringBytes.CopyTo(target, bytePos);
-			pos += maxLength * 8;
+			pos += length * 8;
 		}
 
 		public long Deserialize(ref byte[] target)
@@ -139,9 +142,11 @@ namespace SerializationBenchmark
 
 		private string ReadString(byte[] target, int maxLength, ref int pos)
 		{
+			var length = Math.Min((int) target.Read(ref pos, 8), maxLength);
+			
 			var bytePos = pos / 8;
-			var stringValue = System.Text.Encoding.ASCII.GetString(target, bytePos, maxLength);
-			pos += maxLength * 8;
+			var stringValue = System.Text.Encoding.ASCII.GetString(target, bytePos, length);
+			pos += length * 8;
 			var sanitizedString = stringValue.Trim((char) 0x00);
 			return sanitizedString;
 		}
