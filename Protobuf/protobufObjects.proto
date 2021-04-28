@@ -1,0 +1,21 @@
+syntax = "proto3";
+package protobufObjects;
+
+message Person {
+  enum Sex {
+    Unknown = 0;
+    Male = 1;
+    Female = 2;
+  }
+  
+  int32 Age = 1;
+  string firstName = 2;
+  string lastName = 3;
+  Sex sex = 4;
+}
+
+message Vector3 {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+}
