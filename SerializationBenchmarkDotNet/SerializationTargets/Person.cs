@@ -147,8 +147,7 @@ namespace SerializationBenchmark
 			var bytePos = pos / 8;
 			var stringValue = System.Text.Encoding.ASCII.GetString(target, bytePos, length);
 			pos += length * 8;
-			var sanitizedString = stringValue.Trim((char) 0x00);
-			return sanitizedString;
+			return stringValue;
 		}
 	}
 }
