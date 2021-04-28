@@ -15,11 +15,11 @@ using Newtonsoft.Json;
 
 namespace SerializationBenchmark
 {
-	internal class JsonSerializer : ADirectSerializer<MemoryStream>
+	internal class NewtonsoftJson : ADirectSerializer<MemoryStream>
 	{
 		private Newtonsoft.Json.JsonSerializer jsonSerializer;
 
-		public JsonSerializer() : base()
+		public NewtonsoftJson() : base()
 		{
 			jsonSerializer = new Newtonsoft.Json.JsonSerializer();
 		}
@@ -86,7 +86,7 @@ namespace SerializationBenchmark
 
 		public override string ToString()
 		{
-			return "JsonSerializer";
+			return "NewtonsoftJson";
 		}
 	}
 }
