@@ -100,7 +100,7 @@ namespace SerializationBenchmark
 			bool valid = Serializer.Validate(type, original);
 			if (!valid)
 			{
-				throw new Exception($"Validation error for {original.GetType()} with serializer {Serializer.GetType()}");
+				throw new InvalidSerializationException($"Validation error for {original.GetType()} with serializer {Serializer.GetType()}");
 			}
 		}
 	}
