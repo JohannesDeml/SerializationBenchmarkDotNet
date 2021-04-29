@@ -37,7 +37,8 @@ namespace SerializationBenchmark
 			if (type == typeof(Vector3))
 			{
 				var vector3 = (Vector3) original;
-				FlatbufferObjects.Vector3.CreateVector3(builder, vector3.x, vector3.y, vector3.z);
+				var flatBufferVector3 = FlatbufferObjects.Vector3.CreateVector3(builder, vector3.x, vector3.y, vector3.z);
+				builder.Finish(flatBufferVector3.Value);
 
 				messageSize = GetSize();
 
@@ -83,7 +84,8 @@ namespace SerializationBenchmark
 
 			if (type == typeof(Vector3))
 			{
-				var vector3 = new FlatbufferObjects.Vector3().__assign(4, buf);
+				var offset = buf.GetInt(buf.Position) + buf.Position;
+				var vector3 = new FlatbufferObjects.Vector3().__assign(offset, buf);
 				return vector3;
 			}
 
