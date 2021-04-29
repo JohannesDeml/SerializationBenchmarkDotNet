@@ -19,7 +19,8 @@ namespace SerializationBenchmark
 		protected override byte[] Serialize<T>(T original, out long messageSize)
 		{
 			var bytes = new byte[128];
-			messageSize = original.Serialize(ref bytes) / 8;
+			var bitSize = original.Serialize(ref bytes);
+			messageSize = bitSize / 8;
 			return bytes;
 		}
 
@@ -37,7 +38,8 @@ namespace SerializationBenchmark
 		protected override byte[] Serialize(Type type, ISerializationTarget original, out long messageSize)
 		{
 			var bytes = new byte[128];
-			messageSize = original.Serialize(ref bytes) / 8;
+			var bitSize = original.Serialize(ref bytes);
+			messageSize = bitSize / 8;
 			return bytes;
 		}
 
