@@ -48,6 +48,7 @@ namespace SerializationBenchmark
 		[GlobalSetup(Target = nameof(Serialize))]
 		public void PrepareBenchmark()
 		{
+			// Needed for benchmarking the Protobuf library
 			Target.GenerateProtobufMessage();
 		}
 
@@ -55,6 +56,7 @@ namespace SerializationBenchmark
 		public void PrepareDeserializeBenchmark()
 		{
 			PrepareBenchmark();
+			
 			// Serialize once, so we can deserialize the result
 			Serialize();
 		}
@@ -62,33 +64,23 @@ namespace SerializationBenchmark
 		[Benchmark]
 		public long Serialize()
 		{
-			var size = 0L;
 			if (Generic)
 			{
-				size += Target.Serialize(Serializer);
+				return Target.Serialize(Serializer);
 			}
-			else
-			{
-				size += Serializer.BenchmarkSerialize(Target.GetType(), Target);
-			}
-
-			return size;
+			
+			return Serializer.BenchmarkSerialize(Target.GetType(), Target);
 		}
 
 		[Benchmark]
 		public long Deserialize()
 		{
-			var size = 0L;
 			if (Generic)
 			{
-				size += Target.Deserialize(Serializer);
+				return Target.Deserialize(Serializer);
 			}
-			else
-			{
-				size += Serializer.BenchmarkDeserialize(Target.GetType(), Target);
-			}
-
-			return size;
+			
+			return Serializer.BenchmarkDeserialize(Target.GetType(), Target);
 		}
 
 		[IterationCleanup(Target = nameof(Deserialize))]

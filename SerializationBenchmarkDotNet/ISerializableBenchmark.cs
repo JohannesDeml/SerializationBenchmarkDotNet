@@ -10,6 +10,10 @@
 
 namespace SerializationBenchmark
 {
+	/// <summary>
+	/// Benchmark target for BenchmarkDotNet (bdn)
+	/// Allows for access to serializer and target selected by bdn to get the serialization size
+	/// </summary>
 	public interface ISerializableBenchmark
 	{
 		ISerializer Serializer { get; set; }

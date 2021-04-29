@@ -14,7 +14,7 @@ namespace SerializationBenchmark
 {
 	/// <summary>
 	/// Shows the overhead of the benchmark base class, mainly dictionary lookups
-	/// Every serializer deriving from ADirectSerializer has this overhead
+	/// Every serializer deriving from <see cref="ASerializer{TSerialization,TDeserialization}"/> has this overhead
 	/// </summary>
 	internal class Overhead : ADirectSerializer<ISerializationTarget>
 	{

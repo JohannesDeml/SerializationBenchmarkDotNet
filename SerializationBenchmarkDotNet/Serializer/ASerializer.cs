@@ -13,6 +13,10 @@ using System.Collections.Generic;
 
 namespace SerializationBenchmark
 {
+	/// <summary>
+	/// Stores a single serialization result (e.g. a byte array or memory stream) along with its size
+	/// </summary>
+	/// <typeparam name="TSerialization"></typeparam>
 	public class SerializationResult<TSerialization>
 	{
 		public TSerialization Result;
@@ -25,6 +29,12 @@ namespace SerializationBenchmark
 		}
 	}
 
+	/// <summary>
+	/// Base class for a serializer. Inherit from this class if the target serializer does not use the same class for deserialization
+	/// Otherwise inherit from <see cref="ADirectSerializer{TSerialization}"/>
+	/// </summary>
+	/// <typeparam name="TSerialization">Type the data is serialized to</typeparam>
+	/// <typeparam name="TDeserialization">Type of the deserialization result</typeparam>
 	public abstract class ASerializer<TSerialization, TDeserialization> : ISerializer
 	{
 		private Dictionary<Type, SerializationResult<TSerialization>> serializationResults;
@@ -36,6 +46,7 @@ namespace SerializationBenchmark
 			deserializationResults = new Dictionary<Type, TDeserialization>();
 		}
 
+		/// <inheritdoc />
 		public long BenchmarkSerialize<T>(T original) where T : ISerializationTarget
 		{
 			var result = Serialize(original, out long messageSize);
@@ -43,6 +54,7 @@ namespace SerializationBenchmark
 			return messageSize;
 		}
 
+		/// <inheritdoc />
 		public long BenchmarkSerialize(Type type, ISerializationTarget original)
 		{
 			var result = Serialize(type, original, out long messageSize);
@@ -50,6 +62,7 @@ namespace SerializationBenchmark
 			return messageSize;
 		}
 
+		/// <inheritdoc />
 		public long BenchmarkDeserialize<T>(T original) where T : ISerializationTarget
 		{
 			var type = typeof(T);
@@ -60,6 +73,7 @@ namespace SerializationBenchmark
 			return target.ByteSize;
 		}
 
+		/// <inheritdoc />
 		public long BenchmarkDeserialize(Type type, ISerializationTarget original)
 		{
 			var target = serializationResults[type];
@@ -69,11 +83,7 @@ namespace SerializationBenchmark
 			return target.ByteSize;
 		}
 
-		public bool Validate<T>(T original) where T : ISerializationTarget
-		{
-			return Validate(typeof(T), original);
-		}
-
+		/// <inheritdoc />
 		public bool Validate(Type type, ISerializationTarget original)
 		{
 			if (GetResult(type, out ISerializationTarget result))
@@ -101,6 +111,7 @@ namespace SerializationBenchmark
 
 		#endregion
 
+		/// <inheritdoc />
 		public virtual void Cleanup()
 		{
 			serializationResults.Clear();
