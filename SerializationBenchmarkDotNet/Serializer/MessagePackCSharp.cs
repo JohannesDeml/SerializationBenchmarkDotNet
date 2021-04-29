@@ -14,7 +14,7 @@ namespace SerializationBenchmark
 {
 	internal class MessagePackCSharp : ADirectSerializer<byte[]>
 	{
-		#region GenericSerialization
+		#region Serialization
 
 		protected override byte[] Serialize<T>(T original, out long messageSize)
 		{
@@ -23,20 +23,20 @@ namespace SerializationBenchmark
 			return bytes;
 		}
 
-		protected override ISerializationTarget Deserialize<T>(byte[] bytes)
-		{
-			return MessagePack.MessagePackSerializer.Deserialize<T>(bytes);
-		}
-
-		#endregion
-
-		#region Non-GenericSerialization
-
 		protected override byte[] Serialize(Type type, ISerializationTarget original, out long messageSize)
 		{
 			var bytes = MessagePack.MessagePackSerializer.Serialize(type, original);
 			messageSize = bytes.Length;
 			return bytes;
+		}
+
+		#endregion
+
+		#region Deserialization
+
+		protected override ISerializationTarget Deserialize<T>(byte[] bytes)
+		{
+			return MessagePack.MessagePackSerializer.Deserialize<T>(bytes);
 		}
 
 		protected override ISerializationTarget Deserialize(Type type, byte[] bytes)

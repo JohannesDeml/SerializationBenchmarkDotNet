@@ -84,7 +84,7 @@ namespace SerializationBenchmark
 			return byteSize.ToString("0.##", cultureInfo);
 		}
 
-		private T SetInstanceValueSave<T>(T current, ParameterInstances instances, string name)
+		private static T SetInstanceValueSave<T>(T current, ParameterInstances instances, string name)
 		{
 			var instance = instances.Items.FirstOrDefault(item => item.Name == name);
 			if (instance == null)

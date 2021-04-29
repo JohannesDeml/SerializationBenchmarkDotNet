@@ -15,7 +15,7 @@ namespace SerializationBenchmark
 {
 	internal class ProtobufNet : ADirectSerializer<MemoryStream>
 	{
-		#region GenericSerialization
+		#region Serialization
 
 		protected override MemoryStream Serialize<T>(T original, out long messageSize)
 		{
@@ -25,24 +25,24 @@ namespace SerializationBenchmark
 			return stream;
 		}
 
-		protected override ISerializationTarget Deserialize<T>(MemoryStream stream)
-		{
-			T copy = default(T);
-			stream.Position = 0;
-			copy = ProtoBuf.Serializer.Deserialize<T>(stream);
-			return copy;
-		}
-
-		#endregion
-
-		#region Non-GenericSerialization
-
 		protected override MemoryStream Serialize(Type type, ISerializationTarget original, out long messageSize)
 		{
 			var stream = new MemoryStream();
 			ProtoBuf.Serializer.Serialize(stream, original);
 			messageSize = stream.Position;
 			return stream;
+		}
+
+		#endregion
+
+		#region Deserialization
+
+		protected override ISerializationTarget Deserialize<T>(MemoryStream stream)
+		{
+			T copy = default(T);
+			stream.Position = 0;
+			copy = ProtoBuf.Serializer.Deserialize<T>(stream);
+			return copy;
 		}
 
 		protected override ISerializationTarget Deserialize(Type type, MemoryStream stream)

@@ -14,7 +14,7 @@ namespace SerializationBenchmark
 {
 	internal class ManualBitPacking : ADirectSerializer<byte[]>
 	{
-		#region GenericSerialization
+		#region Serialization
 
 		protected override byte[] Serialize<T>(T original, out long messageSize)
 		{
@@ -24,23 +24,23 @@ namespace SerializationBenchmark
 			return bytes;
 		}
 
-		protected override ISerializationTarget Deserialize<T>(byte[] bytes)
-		{
-			var instance = Activator.CreateInstance<T>();
-			instance.Deserialize(ref bytes);
-			return instance;
-		}
-
-		#endregion
-
-		#region Non-GenericSerialization
-
 		protected override byte[] Serialize(Type type, ISerializationTarget original, out long messageSize)
 		{
 			var bytes = new byte[128];
 			var bitSize = original.Serialize(ref bytes);
 			messageSize = bitSize / 8;
 			return bytes;
+		}
+
+		#endregion
+
+		#region Deserialization
+
+		protected override ISerializationTarget Deserialize<T>(byte[] bytes)
+		{
+			var instance = Activator.CreateInstance<T>();
+			instance.Deserialize(ref bytes);
+			return instance;
 		}
 
 		protected override ISerializationTarget Deserialize(Type type, byte[] bytes)

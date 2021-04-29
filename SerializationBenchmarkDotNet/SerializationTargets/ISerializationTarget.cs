@@ -28,18 +28,18 @@ namespace SerializationBenchmark
 		/// <returns>Serialization size in bytes</returns>
 		long Serialize(ISerializer serializer);
 		/// <summary>
-		/// Trigger generic deserialization of this instance through a defined serializer
-		/// </summary>
-		/// <param name="serializer">Serializer that will deserialize this instance</param>
-		/// <returns>Serialization size in bytes</returns>
-		long Deserialize(ISerializer serializer);
-		
-		/// <summary>
 		/// Trigger custom defined serialization (ManualBitPacking)
 		/// </summary>
 		/// <param name="target">byte buffer to write to</param>
 		/// <returns>Bytes written = Serialization size</returns>
 		long Serialize(ref byte[] target);
+		
+		/// <summary>
+		/// Trigger generic deserialization of this instance through a defined serializer
+		/// </summary>
+		/// <param name="serializer">Serializer that will deserialize this instance</param>
+		/// <returns>Serialization size in bytes</returns>
+		long Deserialize(ISerializer serializer);
 		/// <summary>
 		/// Trigger custom defined deserialization (ManualBitPacking)
 		/// </summary>

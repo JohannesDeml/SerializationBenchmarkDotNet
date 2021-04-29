@@ -20,7 +20,7 @@ namespace SerializationBenchmark
 	{
 		protected override bool GetResult(Type type, out ISerializationTarget result)
 		{
-			return deserializationResults.TryGetValue(type, out result);
+			return DeserializationResults.TryGetValue(type, out result);
 		}
 	}
 }

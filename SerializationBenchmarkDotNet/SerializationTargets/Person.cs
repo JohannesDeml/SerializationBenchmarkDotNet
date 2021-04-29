@@ -29,60 +29,36 @@ namespace SerializationBenchmark
 	[ProtoContract]
 	[DataContract]
 	[MessagePackObject]
-	public class Person : IEquatable<Person>, ISerializationTarget
+	public sealed class Person : IEquatable<Person>, ISerializationTarget
 	{
 		[MessagePackMember(0)]
 		[Key(0)]
 		[ProtoMember(1)]
 		[DataMember]
-		public virtual int Age { get; set; }
+		public int Age { get; set; }
 
 		[MessagePackMember(1)]
 		[Key(1)]
 		[ProtoMember(2)]
 		[DataMember]
-		public virtual string FirstName { get; set; }
+		public string FirstName { get; set; }
 
 		[MessagePackMember(2)]
 		[Key(2)]
 		[ProtoMember(3)]
 		[DataMember]
-		public virtual string LastName { get; set; }
+		public string LastName { get; set; }
 
 		[MessagePackMember(3)]
 		[Key(3)]
 		[ProtoMember(4)]
 		[DataMember]
-		public virtual Sex Sex { get; set; }
+		public Sex Sex { get; set; }
 
 		[NonSerialized]
 		private IMessage<ProtobufObjects.Person> protobufObject;
-		
-		public bool Equals(Person other)
-		{
-			if (ReferenceEquals(null, other)) return false;
-			if (ReferenceEquals(this, other)) return true;
-			return Age == other.Age && FirstName == other.FirstName && LastName == other.LastName && Sex == other.Sex;
-		}
 
-		public bool Equals(ISerializationTarget obj)
-		{
-			if (ReferenceEquals(null, obj)) return false;
-			if (ReferenceEquals(this, obj)) return true;
-			if (obj.GetType() != this.GetType()) return false;
-			return Equals((Person) obj);
-		}
-
-		public override string ToString()
-		{
-			return "Person";
-		}
-
-		public string ToReadableString()
-		{
-			return $"Person Age: {Age}, FirstName: {FirstName}, LastName: {LastName}, Sex: {Sex}";
-		}
-
+		/// <inheritdoc />
 		public void GenerateProtobufMessage()
 		{
 			protobufObject = new ProtobufObjects.Person()
@@ -94,21 +70,19 @@ namespace SerializationBenchmark
 			};
 		}
 
+		/// <inheritdoc />
 		public IMessage GetProtobufMessage()
 		{
 			return protobufObject;
 		}
 
+		/// <inheritdoc />
 		public long Serialize(ISerializer serializer)
 		{
 			return serializer.BenchmarkSerialize(this);
 		}
 
-		public long Deserialize(ISerializer serializer)
-		{
-			return serializer.BenchmarkDeserialize(this);
-		}
-
+		/// <inheritdoc />
 		public long Serialize(ref byte[] target)
 		{
 			var pos = 0;
@@ -119,6 +93,13 @@ namespace SerializationBenchmark
 			return pos;
 		}
 
+		/// <inheritdoc />
+		public long Deserialize(ISerializer serializer)
+		{
+			return serializer.BenchmarkDeserialize(this);
+		}
+
+		/// <inheritdoc />
 		public long Deserialize(ref byte[] target)
 		{
 			var pos = 0;
@@ -127,6 +108,32 @@ namespace SerializationBenchmark
 			LastName = StringSerialization.ReadString(target, 20, ref pos);
 			Sex = (Sex) target.Read(ref pos, 8);
 			return pos;
+		}
+
+		/// <inheritdoc />
+		public string ToReadableString()
+		{
+			return $"Person Age: {Age}, FirstName: {FirstName}, LastName: {LastName}, Sex: {Sex}";
+		}
+		
+		public override string ToString()
+		{
+			return "Person";
+		}
+
+		public bool Equals(Person other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+			return Age == other.Age && FirstName == other.FirstName && LastName == other.LastName && Sex == other.Sex;
+		}
+
+		public bool Equals(ISerializationTarget other)
+		{
+			if (ReferenceEquals(null, other)) return false;
+			if (ReferenceEquals(this, other)) return true;
+			if (other.GetType() != this.GetType()) return false;
+			return Equals((Person) other);
 		}
 	}
 }

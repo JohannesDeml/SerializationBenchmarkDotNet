@@ -56,6 +56,7 @@ namespace SerializationBenchmark
 
 		public bool IsDefault(Summary summary, BenchmarkCase benchmarkCase) => false;
 		public string GetValue(Summary summary, BenchmarkCase benchmarkCase) => cellValue;
+		public string GetValue(Summary summary, BenchmarkCase benchmarkCase, SummaryStyle style) => GetValue(summary, benchmarkCase);
 
 		public bool IsAvailable(Summary summary) => true;
 
@@ -65,7 +66,6 @@ namespace SerializationBenchmark
 		public bool IsNumeric => false;
 		public UnitType UnitType => UnitType.Dimensionless;
 		public string Legend => $"Fixed column with value {cellValue}";
-		public string GetValue(Summary summary, BenchmarkCase benchmarkCase, SummaryStyle style) => GetValue(summary, benchmarkCase);
 		public override string ToString() => ColumnName;
 	}
 }

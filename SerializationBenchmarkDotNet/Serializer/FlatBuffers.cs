@@ -27,17 +27,12 @@ namespace SerializationBenchmark
 			return Serialize(typeof(T), original, out messageSize);
 		}
 
-		protected override IFlatbufferObject Deserialize<T>(byte[] serializedObject)
-		{
-			return (IFlatbufferObject) Deserialize(typeof(T), serializedObject);
-		}
-
 		protected override byte[] Serialize(Type type, ISerializationTarget original, out long messageSize)
 		{
 			if (type == typeof(Vector3))
 			{
 				var vector3 = (Vector3) original;
-				var flatBufferVector3 = FlatbufferObjects.Vector3.CreateVector3(builder, vector3.x, vector3.y, vector3.z);
+				var flatBufferVector3 = FlatbufferObjects.Vector3.CreateVector3(builder, vector3.X, vector3.Y, vector3.Z);
 				builder.Finish(flatBufferVector3.Value);
 
 				messageSize = GetSize();
@@ -77,6 +72,11 @@ namespace SerializationBenchmark
 			// I think offset can be used to get the correct value, since we're clearing the builder every time
 			return builder.Offset;
 		}
+		
+		protected override IFlatbufferObject Deserialize<T>(byte[] serializedObject)
+		{
+			return Deserialize(typeof(T), serializedObject);
+		}
 
 		protected override IFlatbufferObject Deserialize(Type type, byte[] serializedObject)
 		{
@@ -100,7 +100,7 @@ namespace SerializationBenchmark
 
 		protected override bool GetResult(Type type, out ISerializationTarget result)
 		{
-			var intermediateResult = deserializationResults[type];
+			var intermediateResult = DeserializationResults[type];
 
 			if (type == typeof(Vector3))
 			{

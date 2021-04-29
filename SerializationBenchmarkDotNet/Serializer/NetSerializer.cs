@@ -17,7 +17,7 @@ namespace SerializationBenchmark
 {
 	internal class NetSerializer : ADirectSerializer<MemoryStream>
 	{
-		private global::NetSerializer.Serializer netSerializer;
+		private readonly global::NetSerializer.Serializer netSerializer;
 
 		public NetSerializer() : base()
 		{
@@ -25,12 +25,12 @@ namespace SerializationBenchmark
 			netSerializer = new global::NetSerializer.Serializer(rootTypes);
 		}
 
-		IEnumerable<Type> GetSubclasses(Type type)
+		static IEnumerable<Type> GetSubclasses(Type type)
 		{
 			return type.Assembly.GetTypes().Where(t => type.IsAssignableFrom(t));
 		}
 
-		#region GenericSerialization
+		#region Serialization
 
 		protected override MemoryStream Serialize<T>(T original, out long messageSize)
 		{
@@ -40,18 +40,6 @@ namespace SerializationBenchmark
 			return stream;
 		}
 
-		protected override ISerializationTarget Deserialize<T>(MemoryStream stream)
-		{
-			T copy = default(T);
-			stream.Position = 0;
-			netSerializer.DeserializeDirect<T>(stream, out copy);
-			return copy;
-		}
-
-		#endregion
-
-		#region Non-GenericSerialization
-
 		protected override MemoryStream Serialize(Type type, ISerializationTarget original, out long messageSize)
 		{
 			var stream = new MemoryStream();
@@ -60,11 +48,21 @@ namespace SerializationBenchmark
 			return stream;
 		}
 
+		#endregion
+
+		#region Deserialization
+
+		protected override ISerializationTarget Deserialize<T>(MemoryStream stream)
+		{
+			stream.Position = 0;
+			netSerializer.DeserializeDirect<T>(stream, out var copy);
+			return copy;
+		}
+
 		protected override ISerializationTarget Deserialize(Type type, MemoryStream stream)
 		{
-			object copy;
 			stream.Position = 0;
-			netSerializer.DeserializeDirect(stream, out copy);
+			netSerializer.DeserializeDirect(stream, out object copy);
 			return (ISerializationTarget) copy;
 		}
 

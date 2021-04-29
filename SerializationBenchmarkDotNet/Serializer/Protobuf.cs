@@ -15,25 +15,12 @@ namespace SerializationBenchmark
 {
 	internal class Protobuf : ASerializer<byte[], IMessage>
 	{
-		#region GenericSerialization
+		#region Serialization
 
 		protected override byte[] Serialize<T>(T original, out long messageSize)
 		{
-			var message = original.GetProtobufMessage();
-			messageSize = message.CalculateSize();
-			var bytes = new byte[messageSize];
-			message.WriteTo(bytes);
-			return bytes;
+			return Serialize(typeof(T), original, out messageSize);
 		}
-
-		protected override IMessage Deserialize<T>(byte[] bytes)
-		{
-			return Deserialize(typeof(T), bytes);
-		}
-
-		#endregion
-
-		#region Non-GenericSerialization
 
 		protected override byte[] Serialize(Type type, ISerializationTarget original, out long messageSize)
 		{
@@ -42,6 +29,15 @@ namespace SerializationBenchmark
 			var bytes = new byte[messageSize];
 			message.WriteTo(bytes);
 			return bytes;
+		}
+
+		#endregion
+
+		#region Deserialization
+
+		protected override IMessage Deserialize<T>(byte[] bytes)
+		{
+			return Deserialize(typeof(T), bytes);
 		}
 
 		protected override IMessage Deserialize(Type type, byte[] bytes)
@@ -65,7 +61,7 @@ namespace SerializationBenchmark
 
 		protected override bool GetResult(Type type, out ISerializationTarget result)
 		{
-			var intermediateResult = deserializationResults[type];
+			var intermediateResult = DeserializationResults[type];
 
 			if (type == typeof(Vector3))
 			{

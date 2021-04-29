@@ -15,14 +15,14 @@ namespace SerializationBenchmark
 {
 	internal class Lz4MessagePackCSharp : ADirectSerializer<byte[]>
 	{
-		MessagePackSerializerOptions lz4Options;
+		readonly MessagePackSerializerOptions lz4Options;
 
 		public Lz4MessagePackCSharp() : base()
 		{
 			lz4Options = MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4BlockArray);
 		}
 
-		#region GenericSerialization
+		#region Serialization
 
 		protected override byte[] Serialize<T>(T original, out long messageSize)
 		{
@@ -31,20 +31,20 @@ namespace SerializationBenchmark
 			return bytes;
 		}
 
-		protected override ISerializationTarget Deserialize<T>(byte[] bytes)
-		{
-			return MessagePack.MessagePackSerializer.Deserialize<T>(bytes, lz4Options);
-		}
-
-		#endregion
-
-		#region Non-GenericSerialization
-
 		protected override byte[] Serialize(Type type, ISerializationTarget original, out long messageSize)
 		{
 			var bytes = MessagePack.MessagePackSerializer.Serialize(type, original, lz4Options);
 			messageSize = bytes.Length;
 			return bytes;
+		}
+
+		#endregion
+
+		#region Deserialization
+
+		protected override ISerializationTarget Deserialize<T>(byte[] bytes)
+		{
+			return MessagePack.MessagePackSerializer.Deserialize<T>(bytes, lz4Options);
 		}
 
 		protected override ISerializationTarget Deserialize(Type type, byte[] bytes)
