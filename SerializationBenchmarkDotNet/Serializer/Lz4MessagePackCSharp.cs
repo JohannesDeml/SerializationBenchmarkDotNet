@@ -56,7 +56,7 @@ namespace SerializationBenchmark
 
 		public override string ToString()
 		{
-			return "Lz4MessagePackCSharp";
+			return "Lz4MessagePack-CSharp";
 		}
 	}
 }

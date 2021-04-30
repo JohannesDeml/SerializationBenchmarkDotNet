@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ManualBitPacking.cs">
+// <copyright file="ManualSerialization.cs">
 //   Copyright (c) 2020 Johannes Deml. All rights reserved.
 // </copyright>
 // <author>
@@ -12,7 +12,7 @@ using System;
 
 namespace SerializationBenchmark
 {
-	internal class ManualBitPacking : ADirectSerializer<byte[]>
+	internal class ManualSerialization : ADirectSerializer<byte[]>
 	{
 		#region Serialization
 
@@ -54,7 +54,7 @@ namespace SerializationBenchmark
 
 		public override string ToString()
 		{
-			return "ManualBitPacking";
+			return "ManualSerialization";
 		}
 	}
 }
