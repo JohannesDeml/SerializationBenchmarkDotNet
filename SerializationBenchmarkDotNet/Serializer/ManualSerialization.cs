@@ -54,7 +54,7 @@ namespace SerializationBenchmark
 
 		public override string ToString()
 		{
-			return "ManualSerialization";
+			return "Manual Serialization";
 		}
 	}
 }

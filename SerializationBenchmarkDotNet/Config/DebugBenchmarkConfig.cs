@@ -8,21 +8,26 @@
 // </author>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
+using BenchmarkDotNet.Columns;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Jobs;
+using BenchmarkDotNet.Loggers;
 
 namespace SerializationBenchmark
 {
-	public class DebugBenchmarkConfig : DebugConfig
+	public class DebugBenchmarkConfig : ManualConfig
 	{
-		public override IEnumerable<Job> GetJobs()
-			=> new[]
-			{
-				Job.InProcess
-					.RunOncePerIteration()
-					.WithGcServer(true)
-					.WithGcForce(false)
-			};
+		public DebugBenchmarkConfig()
+		{
+			AddJob(Job.InProcess
+				.RunOncePerIteration()
+				.WithGcServer(true)
+				.WithGcConcurrent(true)
+				.WithGcForce(false));
+
+			AddLogger(ConsoleLogger.Default);
+			AddColumnProvider(DefaultColumnProviders.Instance);
+			AddColumn(new DataSizeColumn());
+		}
 	}
 }

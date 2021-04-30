@@ -57,7 +57,7 @@ namespace SerializationBenchmark
 
 		public override string ToString()
 		{
-			return "ProtobufNet";
+			return "Protobuf-Net";
 		}
 	}
 }

@@ -48,7 +48,7 @@ namespace SerializationBenchmark
 
 		public override string ToString()
 		{
-			return "MsgPack";
+			return "MsgPack-CLI";
 		}
 	}
 }
