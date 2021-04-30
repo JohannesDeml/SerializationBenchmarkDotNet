@@ -33,6 +33,9 @@ namespace SerializationBenchmark
 			using var jw = new JsonTextWriter(tw);
 			jsonSerializer.Serialize(jw, original);
 			
+			// Flush needed for moving the stream position
+			jw.Flush();
+
 			messageSize = stream.Position;
 			return stream;
 		}
@@ -44,6 +47,10 @@ namespace SerializationBenchmark
 			using var jw = new JsonTextWriter(tw);
 			jsonSerializer.Serialize(jw, original, type);
 
+			// Flush needed for moving the stream position
+			jw.Flush();
+
+			
 			messageSize = stream.Position;
 			return stream;
 		}
