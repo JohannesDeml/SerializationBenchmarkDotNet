@@ -35,14 +35,14 @@ public struct Person : IFlatbufferObject
   public ArraySegment<byte>? GetLastNameBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetLastNameArray() { return __p.__vector_as_array<byte>(8); }
-  public FlatbufferObjects.Sex Sex { get { int o = __p.__offset(10); return o != 0 ? (FlatbufferObjects.Sex)__p.bb.Get(o + __p.bb_pos) : FlatbufferObjects.Sex.Unknown; } }
+  public FlatbufferObjects.Sex Sex { get { int o = __p.__offset(10); return o != 0 ? (FlatbufferObjects.Sex)__p.bb.Get(o + __p.bb_pos) : FlatbufferObjects.Sex.Undefined; } }
   public bool MutateSex(FlatbufferObjects.Sex sex) { int o = __p.__offset(10); if (o != 0) { __p.bb.Put(o + __p.bb_pos, (byte)sex); return true; } else { return false; } }
 
   public static Offset<FlatbufferObjects.Person> CreatePerson(FlatBufferBuilder builder,
       byte age = 0,
       StringOffset firstNameOffset = default(StringOffset),
       StringOffset lastNameOffset = default(StringOffset),
-      FlatbufferObjects.Sex sex = FlatbufferObjects.Sex.Unknown) {
+      FlatbufferObjects.Sex sex = FlatbufferObjects.Sex.Undefined) {
     builder.StartTable(4);
     Person.AddLastName(builder, lastNameOffset);
     Person.AddFirstName(builder, firstNameOffset);

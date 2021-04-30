@@ -1,6 +1,6 @@
 namespace FlatbufferObjects;
 
-enum Sex:ubyte { Unknown = 0, Male = 1, Female = 2 }
+enum Sex:ubyte { Undefined = 0, Male = 1, Female = 2 }
 
 table Person {
     age:ubyte;

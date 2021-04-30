@@ -7,7 +7,7 @@ namespace FlatbufferObjects
 
 public enum Sex : byte
 {
-  Unknown = 0,
+  Undefined = 0,
   Male = 1,
   Female = 2,
 };

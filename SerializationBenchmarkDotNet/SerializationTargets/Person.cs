@@ -20,7 +20,7 @@ namespace SerializationBenchmark
 {
 	public enum Sex : sbyte
 	{
-		Unknown,
+		Undefined,
 		Male,
 		Female,
 	}

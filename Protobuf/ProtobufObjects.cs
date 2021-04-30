@@ -24,12 +24,12 @@ namespace ProtobufObjects {
     static ProtobufObjectsReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChVwcm90b2J1Zk9iamVjdHMucHJvdG8SD3Byb3RvYnVmT2JqZWN0cyKOAQoG",
+            "ChVwcm90b2J1Zk9iamVjdHMucHJvdG8SD3Byb3RvYnVmT2JqZWN0cyKQAQoG",
             "UGVyc29uEgsKA0FnZRgBIAEoDRIRCglmaXJzdE5hbWUYAiABKAkSEAoIbGFz",
             "dE5hbWUYAyABKAkSKAoDc2V4GAQgASgOMhsucHJvdG9idWZPYmplY3RzLlBl",
-            "cnNvbi5TZXgiKAoDU2V4EgsKB1Vua25vd24QABIICgRNYWxlEAESCgoGRmVt",
-            "YWxlEAIiKgoHVmVjdG9yMxIJCgF4GAEgASgCEgkKAXkYAiABKAISCQoBehgD",
-            "IAEoAmIGcHJvdG8z"));
+            "cnNvbi5TZXgiKgoDU2V4Eg0KCVVuZGVmaW5lZBAAEggKBE1hbGUQARIKCgZG",
+            "ZW1hbGUQAiIqCgdWZWN0b3IzEgkKAXgYASABKAISCQoBeRgCIAEoAhIJCgF6",
+            "GAMgASgCYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -117,7 +117,7 @@ namespace ProtobufObjects {
 
     /// <summary>Field number for the "sex" field.</summary>
     public const int SexFieldNumber = 4;
-    private global::ProtobufObjects.Person.Types.Sex sex_ = global::ProtobufObjects.Person.Types.Sex.Unknown;
+    private global::ProtobufObjects.Person.Types.Sex sex_ = global::ProtobufObjects.Person.Types.Sex.Undefined;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public global::ProtobufObjects.Person.Types.Sex Sex {
       get { return sex_; }
@@ -152,7 +152,7 @@ namespace ProtobufObjects {
       if (Age != 0) hash ^= Age.GetHashCode();
       if (FirstName.Length != 0) hash ^= FirstName.GetHashCode();
       if (LastName.Length != 0) hash ^= LastName.GetHashCode();
-      if (Sex != global::ProtobufObjects.Person.Types.Sex.Unknown) hash ^= Sex.GetHashCode();
+      if (Sex != global::ProtobufObjects.Person.Types.Sex.Undefined) hash ^= Sex.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -181,7 +181,7 @@ namespace ProtobufObjects {
         output.WriteRawTag(26);
         output.WriteString(LastName);
       }
-      if (Sex != global::ProtobufObjects.Person.Types.Sex.Unknown) {
+      if (Sex != global::ProtobufObjects.Person.Types.Sex.Undefined) {
         output.WriteRawTag(32);
         output.WriteEnum((int) Sex);
       }
@@ -206,7 +206,7 @@ namespace ProtobufObjects {
         output.WriteRawTag(26);
         output.WriteString(LastName);
       }
-      if (Sex != global::ProtobufObjects.Person.Types.Sex.Unknown) {
+      if (Sex != global::ProtobufObjects.Person.Types.Sex.Undefined) {
         output.WriteRawTag(32);
         output.WriteEnum((int) Sex);
       }
@@ -228,7 +228,7 @@ namespace ProtobufObjects {
       if (LastName.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(LastName);
       }
-      if (Sex != global::ProtobufObjects.Person.Types.Sex.Unknown) {
+      if (Sex != global::ProtobufObjects.Person.Types.Sex.Undefined) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Sex);
       }
       if (_unknownFields != null) {
@@ -251,7 +251,7 @@ namespace ProtobufObjects {
       if (other.LastName.Length != 0) {
         LastName = other.LastName;
       }
-      if (other.Sex != global::ProtobufObjects.Person.Types.Sex.Unknown) {
+      if (other.Sex != global::ProtobufObjects.Person.Types.Sex.Undefined) {
         Sex = other.Sex;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -324,7 +324,7 @@ namespace ProtobufObjects {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static partial class Types {
       public enum Sex {
-        [pbr::OriginalName("Unknown")] Unknown = 0,
+        [pbr::OriginalName("Undefined")] Undefined = 0,
         [pbr::OriginalName("Male")] Male = 1,
         [pbr::OriginalName("Female")] Female = 2,
       }
