@@ -25,7 +25,7 @@ namespace ProtobufObjects {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChVwcm90b2J1Zk9iamVjdHMucHJvdG8SD3Byb3RvYnVmT2JqZWN0cyKOAQoG",
-            "UGVyc29uEgsKA0FnZRgBIAEoBRIRCglmaXJzdE5hbWUYAiABKAkSEAoIbGFz",
+            "UGVyc29uEgsKA0FnZRgBIAEoDRIRCglmaXJzdE5hbWUYAiABKAkSEAoIbGFz",
             "dE5hbWUYAyABKAkSKAoDc2V4GAQgASgOMhsucHJvdG9idWZPYmplY3RzLlBl",
             "cnNvbi5TZXgiKAoDU2V4EgsKB1Vua25vd24QABIICgRNYWxlEAESCgoGRmVt",
             "YWxlEAIiKgoHVmVjdG9yMxIJCgF4GAEgASgCEgkKAXkYAiABKAISCQoBehgD",
@@ -84,9 +84,9 @@ namespace ProtobufObjects {
 
     /// <summary>Field number for the "Age" field.</summary>
     public const int AgeFieldNumber = 1;
-    private int age_;
+    private uint age_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int Age {
+    public uint Age {
       get { return age_; }
       set {
         age_ = value;
@@ -171,7 +171,7 @@ namespace ProtobufObjects {
     #else
       if (Age != 0) {
         output.WriteRawTag(8);
-        output.WriteInt32(Age);
+        output.WriteUInt32(Age);
       }
       if (FirstName.Length != 0) {
         output.WriteRawTag(18);
@@ -196,7 +196,7 @@ namespace ProtobufObjects {
     void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
       if (Age != 0) {
         output.WriteRawTag(8);
-        output.WriteInt32(Age);
+        output.WriteUInt32(Age);
       }
       if (FirstName.Length != 0) {
         output.WriteRawTag(18);
@@ -220,7 +220,7 @@ namespace ProtobufObjects {
     public int CalculateSize() {
       int size = 0;
       if (Age != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Age);
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Age);
       }
       if (FirstName.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(FirstName);
@@ -269,7 +269,7 @@ namespace ProtobufObjects {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
           case 8: {
-            Age = input.ReadInt32();
+            Age = input.ReadUInt32();
             break;
           }
           case 18: {
@@ -299,7 +299,7 @@ namespace ProtobufObjects {
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
           case 8: {
-            Age = input.ReadInt32();
+            Age = input.ReadUInt32();
             break;
           }
           case 18: {

@@ -19,8 +19,8 @@ public struct Person : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public Person __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public int Age { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public bool MutateAge(int age) { int o = __p.__offset(4); if (o != 0) { __p.bb.PutInt(o + __p.bb_pos, age); return true; } else { return false; } }
+  public byte Age { get { int o = __p.__offset(4); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  public bool MutateAge(byte age) { int o = __p.__offset(4); if (o != 0) { __p.bb.Put(o + __p.bb_pos, age); return true; } else { return false; } }
   public string FirstName { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetFirstNameBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -35,27 +35,27 @@ public struct Person : IFlatbufferObject
   public ArraySegment<byte>? GetLastNameBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetLastNameArray() { return __p.__vector_as_array<byte>(8); }
-  public FlatbufferObjects.Sex Sex { get { int o = __p.__offset(10); return o != 0 ? (FlatbufferObjects.Sex)__p.bb.GetSbyte(o + __p.bb_pos) : FlatbufferObjects.Sex.Unknown; } }
-  public bool MutateSex(FlatbufferObjects.Sex sex) { int o = __p.__offset(10); if (o != 0) { __p.bb.PutSbyte(o + __p.bb_pos, (sbyte)sex); return true; } else { return false; } }
+  public FlatbufferObjects.Sex Sex { get { int o = __p.__offset(10); return o != 0 ? (FlatbufferObjects.Sex)__p.bb.Get(o + __p.bb_pos) : FlatbufferObjects.Sex.Unknown; } }
+  public bool MutateSex(FlatbufferObjects.Sex sex) { int o = __p.__offset(10); if (o != 0) { __p.bb.Put(o + __p.bb_pos, (byte)sex); return true; } else { return false; } }
 
   public static Offset<FlatbufferObjects.Person> CreatePerson(FlatBufferBuilder builder,
-      int age = 0,
+      byte age = 0,
       StringOffset firstNameOffset = default(StringOffset),
       StringOffset lastNameOffset = default(StringOffset),
       FlatbufferObjects.Sex sex = FlatbufferObjects.Sex.Unknown) {
     builder.StartTable(4);
     Person.AddLastName(builder, lastNameOffset);
     Person.AddFirstName(builder, firstNameOffset);
-    Person.AddAge(builder, age);
     Person.AddSex(builder, sex);
+    Person.AddAge(builder, age);
     return Person.EndPerson(builder);
   }
 
   public static void StartPerson(FlatBufferBuilder builder) { builder.StartTable(4); }
-  public static void AddAge(FlatBufferBuilder builder, int age) { builder.AddInt(0, age, 0); }
+  public static void AddAge(FlatBufferBuilder builder, byte age) { builder.AddByte(0, age, 0); }
   public static void AddFirstName(FlatBufferBuilder builder, StringOffset firstNameOffset) { builder.AddOffset(1, firstNameOffset.Value, 0); }
   public static void AddLastName(FlatBufferBuilder builder, StringOffset lastNameOffset) { builder.AddOffset(2, lastNameOffset.Value, 0); }
-  public static void AddSex(FlatBufferBuilder builder, FlatbufferObjects.Sex sex) { builder.AddSbyte(3, (sbyte)sex, 0); }
+  public static void AddSex(FlatBufferBuilder builder, FlatbufferObjects.Sex sex) { builder.AddByte(3, (byte)sex, 0); }
   public static Offset<FlatbufferObjects.Person> EndPerson(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<FlatbufferObjects.Person>(o);

@@ -35,7 +35,7 @@ namespace SerializationBenchmark
 		[Key(0)]
 		[ProtoMember(1)]
 		[DataMember]
-		public int Age { get; set; }
+		public byte Age { get; set; }
 
 		[MessagePackMember(1)]
 		[Key(1)]
@@ -103,7 +103,7 @@ namespace SerializationBenchmark
 		public long Deserialize(ref byte[] target)
 		{
 			var pos = 0;
-			Age = (int) target.Read(ref pos, 8);
+			Age = (byte) target.Read(ref pos, 8);
 			FirstName = StringSerialization.ReadString(target, 20, ref pos);
 			LastName = StringSerialization.ReadString(target, 20, ref pos);
 			Sex = (Sex) target.Read(ref pos, 8);

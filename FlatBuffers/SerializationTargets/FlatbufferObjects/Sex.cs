@@ -5,7 +5,7 @@
 namespace FlatbufferObjects
 {
 
-public enum Sex : sbyte
+public enum Sex : byte
 {
   Unknown = 0,
   Male = 1,

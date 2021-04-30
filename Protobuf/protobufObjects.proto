@@ -7,8 +7,8 @@ message Person {
     Male = 1;
     Female = 2;
   }
-  
-  int32 Age = 1;
+
+  uint32 Age = 1;
   string firstName = 2;
   string lastName = 3;
   Sex sex = 4;

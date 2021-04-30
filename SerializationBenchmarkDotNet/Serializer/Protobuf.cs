@@ -75,7 +75,7 @@ namespace SerializationBenchmark
 				var person = (ProtobufObjects.Person) intermediateResult;
 				result = new Person()
 				{
-					Age = person.Age,
+					Age = (byte) person.Age,
 					FirstName = person.FirstName,
 					LastName = person.LastName,
 					Sex = (Sex) person.Sex
