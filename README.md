@@ -43,7 +43,21 @@ The benchmarks were run with three different setups. The results are shown in th
 ### Results
 Here are the results from the 5 most promising libraries. All other results can be seen in the overview chart above or can be analyzed in the raw results from the release section. The results presented here are from the Ubuntu VPS setup. The results are cleaned by substracting the retrieved benchmark overhead.  
 
-The benchmarks are generated with [BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet).
+The benchmarks are generated with [BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet). The results are generated from version 1.0.0
+
+``` ini
+BenchmarkDotNet=v0.12.1, OS=ubuntu 20.04
+AMD EPYC 7702P, 1 CPU, 4 logical and 4 physical cores
+.NET Core SDK=5.0.202
+  [Host]     : .NET Core 5.0.5 (CoreCLR 5.0.521.16609, CoreFX 5.0.521.16609), X64 RyuJIT
+  Job-TIPVXW : .NET Core 5.0.5 (CoreCLR 5.0.521.16609, CoreFX 5.0.521.16609), X64 RyuJIT
+
+Platform=X64  Runtime=.NET Core 5.0  Concurrent=True  
+Force=False  Server=True  IterationTime=250.0000 ms  
+MaxIterationCount=20  MinIterationCount=15  UnrollFactor=8  
+WarmupCount=3  Version=1.0.0  OS=Linux 5.4.0-72-generic #80-Ubuntu SMP Mon Apr 12 17:35:00 UTC 2021  
+DateTime=04/30/2021 11:07:23  SystemTag=Ubuntu VPS  
+```
 
 #### Serialization
 ![Serialization duration](./Docs/sbn-serialize-1.0.0.png)
@@ -56,7 +70,7 @@ The benchmarks are generated with [BenchmarkDotNet](https://github.com/dotnet/Be
 
 Make sure you have [.Net 5 SDK](https://dotnet.microsoft.com/download) installed.  
 
-You can reproduce the results by running `linux-benchmark.sh` on Linux or `win-benchmark.bat` on Windows.
+You can reproduce the results by running `linux-benchmark.sh` on Linux or `win-benchmark.bat` on Windows. The benchmarks will take about 5 minutes to complete.
 
 ## Contribute
 
