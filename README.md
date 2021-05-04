@@ -31,6 +31,7 @@ The benchmarks were run with three different setups. The results are shown in th
 * Ubuntu VPS
   * Virtual private server with dedicated CPU's running - [Hardware](https://www.netcup.eu/bestellen/produkt.php?produkt=2624)
   * Ubuntu 20.04.2 LTS x86-64 Kernel 5.4.0-72-generic
+
 * Ubuntu Desktop / Windows Desktop
   * Desktop PC from 2020 - [Hardware](https://pcpartpicker.com/user/JohannesDeml/saved/zz7yK8)
   * Windows 10 Pro 20H2 x86-64 Build 19042.844
@@ -42,6 +43,8 @@ The benchmarks were run with three different setups. The results are shown in th
 
 ### Results
 Here are the results from the 5 most promising libraries. All other results can be seen in the overview chart above or can be analyzed in the raw results from the release section. The results presented here are from the Ubuntu VPS setup. The results are cleaned by substracting the retrieved benchmark overhead.  
+
+You can find the raw data of the results in the [release section](../../releases).
 
 The benchmarks are generated with [BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet). The results are generated from version 1.0.0
 
