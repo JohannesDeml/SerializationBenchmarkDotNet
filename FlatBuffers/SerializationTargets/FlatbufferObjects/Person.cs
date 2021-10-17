@@ -13,7 +13,7 @@ public struct Person : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_1_12_0(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_2_0_0(); }
   public static Person GetRootAsPerson(ByteBuffer _bb) { return GetRootAsPerson(_bb, new Person()); }
   public static Person GetRootAsPerson(ByteBuffer _bb, Person obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
@@ -40,12 +40,12 @@ public struct Person : IFlatbufferObject
 
   public static Offset<FlatbufferObjects.Person> CreatePerson(FlatBufferBuilder builder,
       byte age = 0,
-      StringOffset firstNameOffset = default(StringOffset),
-      StringOffset lastNameOffset = default(StringOffset),
+      StringOffset first_nameOffset = default(StringOffset),
+      StringOffset last_nameOffset = default(StringOffset),
       FlatbufferObjects.Sex sex = FlatbufferObjects.Sex.Undefined) {
     builder.StartTable(4);
-    Person.AddLastName(builder, lastNameOffset);
-    Person.AddFirstName(builder, firstNameOffset);
+    Person.AddLastName(builder, last_nameOffset);
+    Person.AddFirstName(builder, first_nameOffset);
     Person.AddSex(builder, sex);
     Person.AddAge(builder, age);
     return Person.EndPerson(builder);

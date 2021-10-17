@@ -13,29 +13,34 @@ This benchmark compares serialization times, deserialization times and serializa
 ## Libraries
 
 * Manual Serialization with [BitPackingTools](https://github.com/emotitron/BitpackingTools)
-* [Protobuf](https://github.com/protocolbuffers/protobuf) (v3.5.18)
-* [MessagePack-CSharp](https://github.com/neuecc/MessagePack-CSharp) (v2.2.85)
+* [Protobuf](https://github.com/protocolbuffers/protobuf) (v3.18.1)
+* [MessagePack-CSharp](https://github.com/neuecc/MessagePack-CSharp) (v2.3.85)
 * [NetSerializer](https://github.com/tomba/netserializer) (v4.1.1)
-* [FlatBuffers](https://github.com/google/flatbuffers) (v1.12.0 - master [14725d6](https://github.com/google/flatbuffers/commit/14725d6c3b901f210ee08715fb5c359369bcf3ef))
+* [FlatBuffers](https://github.com/google/flatbuffers) (v2.0.4 - master [2ece9e2](https://github.com/google/flatbuffers/commit/2ece9e25b469a2b42012738ead29a918c890aa40))
 * [Protobuf-Net](https://github.com/protobuf-net/protobuf-net) (v3.0.101)
 * [MsgPack-CLI](https://github.com/msgpack/msgpack-cli) (v1.0.1)
 * [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json) (v13.0.1)
 
 ## Benchmarks
 
-![Overview](./Docs/sbn-overview-1.0.0-2-rows.png)
+![Overview](./Docs/sbn-overview-1.0.1-2-rows.png)
 The benchmarks were run with three different setups. The results are shown in the charts above. Newtonsoft.Json was removed from this results, since it takes significantly more time for serialization and deserialization and would have made the chart hard to read.
 
-### Used Hardware
+### Hardware
 
 * Ubuntu VPS
   * Virtual private server with dedicated CPU's running - [Hardware](https://www.netcup.eu/bestellen/produkt.php?produkt=2624)
-  * Ubuntu 20.04.2 LTS x86-64 Kernel 5.4.0-72-generic
+  * Ubuntu 20.04.3 LTS x86-64 Kernel 5.14.0-051400-generic
 
 * Ubuntu Desktop / Windows Desktop
   * Desktop PC from 2020 - [Hardware](https://pcpartpicker.com/user/JohannesDeml/saved/zz7yK8)
-  * Windows 10 Pro 20H2 x86-64 Build 19042.844
-  * Ubuntu 20.04.2 LTS x86-64 Kernel 5.8.0-50-generic
+  * Windows 10 Pro x86-64 Build 19043.1266 (21H1/May2021Update)
+  * Ubuntu 20.04.3 LTS x86-64 Kernel 5.11.0-37-generic
+
+### Software
+
+* [.NET](https://dotnet.microsoft.com/download/dotnet) 5.0.11 (5.0.1121.47308)
+* [BenchmarkDotNet](https://github.com/dotnet/BenchmarkDotNet) 0.13.1
 
 ### Targets
 * Person: Class with 2 variable length strings, one byte for age and enum Sex with three values
@@ -63,11 +68,11 @@ DateTime=04/30/2021 11:07:23  SystemTag=Ubuntu VPS
 ```
 
 #### Serialization
-![Serialization duration](./Docs/sbn-serialize-1.0.0.png)
+![Serialization duration](./Docs/sbn-serialize-1.0.1.png)
 #### Deserialization
-![Overview](./Docs/sbn-deserialize-1.0.0.png)
+![Overview](./Docs/sbn-deserialize-1.0.1.png)
 #### Serialization Size
-![Overview](./Docs/sbn-datasize-1.0.0.png)
+![Overview](./Docs/sbn-datasize-1.0.1.png)
 
 ### Reproduce
 
