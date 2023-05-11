@@ -20,6 +20,7 @@ This benchmark compares serialization times, deserialization times and serializa
 * [Protobuf-Net](https://github.com/protobuf-net/protobuf-net) (v3.2.16)
 * [MsgPack-CLI](https://github.com/msgpack/msgpack-cli) (v1.0.1)
 * [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json) (v13.0.3)
+* [Utf8Json](https://github.com/neuecc/Utf8Json) (v1.3.7)
 
 ## Benchmarks
 

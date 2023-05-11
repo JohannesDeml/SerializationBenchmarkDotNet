@@ -30,13 +30,14 @@ namespace SerializationBenchmark
 			new Overhead(),
 			new ManualSerialization(),
 			new FlatBuffers(),
-			new NewtonsoftJson(),
 			new Lz4MessagePackCSharp(),
 			new MessagePackCSharp(),
 			new MsgPack(),
 			new NetSerializer(),
+			new NewtonsoftJson(),
 			new ProtobufNet(),
 			new Protobuf(),
+			new Utf8JsonSerializer(),
 		};
 
 		public IEnumerable<ISerializationTarget> Targets => new ISerializationTarget[]
