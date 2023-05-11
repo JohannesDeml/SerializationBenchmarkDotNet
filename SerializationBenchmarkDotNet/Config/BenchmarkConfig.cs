@@ -30,8 +30,7 @@ namespace SerializationBenchmark
 				.WithGcServer(true)
 				.WithGcConcurrent(true)
 				.WithGcForce(false)
-				.WithRuntime(CoreRuntime.Core50)
-				.WithPlatform(Platform.X64));
+				.WithRuntime(CoreRuntime.Core60));
 
 			AddColumn(new DataSizeColumn());
 			ConfigHelper.AddDefaultColumns(this);

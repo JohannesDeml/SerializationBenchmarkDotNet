@@ -7,15 +7,16 @@ namespace FlatbufferObjects
 
 using global::System;
 using global::System.Collections.Generic;
-using global::FlatBuffers;
+using global::Google.FlatBuffers;
 
 public struct Person : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_2_0_0(); }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_23_5_9(); }
   public static Person GetRootAsPerson(ByteBuffer _bb) { return GetRootAsPerson(_bb, new Person()); }
   public static Person GetRootAsPerson(ByteBuffer _bb, Person obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static bool VerifyPerson(ByteBuffer _bb) {Google.FlatBuffers.Verifier verifier = new Google.FlatBuffers.Verifier(_bb); return verifier.VerifyBuffer("", false, PersonVerify.Verify); }
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public Person __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
@@ -62,7 +63,20 @@ public struct Person : IFlatbufferObject
   }
   public static void FinishPersonBuffer(FlatBufferBuilder builder, Offset<FlatbufferObjects.Person> offset) { builder.Finish(offset.Value); }
   public static void FinishSizePrefixedPersonBuffer(FlatBufferBuilder builder, Offset<FlatbufferObjects.Person> offset) { builder.FinishSizePrefixed(offset.Value); }
-};
+}
 
+
+static public class PersonVerify
+{
+  static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
+  {
+    return verifier.VerifyTableStart(tablePos)
+      && verifier.VerifyField(tablePos, 4 /*Age*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyString(tablePos, 6 /*FirstName*/, false)
+      && verifier.VerifyString(tablePos, 8 /*LastName*/, false)
+      && verifier.VerifyField(tablePos, 10 /*Sex*/, 1 /*FlatbufferObjects.Sex*/, 1, false)
+      && verifier.VerifyTableEnd(tablePos);
+  }
+}
 
 }

@@ -7,7 +7,7 @@ namespace FlatbufferObjects
 
 using global::System;
 using global::System.Collections.Generic;
-using global::FlatBuffers;
+using global::Google.FlatBuffers;
 
 public struct Vector3 : IFlatbufferObject
 {
@@ -30,7 +30,7 @@ public struct Vector3 : IFlatbufferObject
     builder.PutFloat(X);
     return new Offset<FlatbufferObjects.Vector3>(builder.Offset);
   }
-};
+}
 
 
 }

@@ -1,10 +1,10 @@
 # Serialization Benchmark .NET
 
-*Benchmark for different serialization libraries for .NET Core /.NET 5*
+*Benchmark for different serialization libraries for .NET 6*
 
 ![Screenshot](./Docs/screenshot.png)
 
-[![Releases](https://img.shields.io/github/release/JohannesDeml/SerializationBenchmarkDotNet/all.svg)](../../releases) [![.NET 5.0](https://img.shields.io/badge/.NET-5.0-blueviolet.svg)](https://dotnet.microsoft.com/download/dotnet/5.0)
+[![Releases](https://img.shields.io/github/release/JohannesDeml/SerializationBenchmarkDotNet/all.svg)](../../releases) [![.NET 6](https://img.shields.io/badge/.NET-6-blueviolet.svg)](https://dotnet.microsoft.com/download/dotnet/6.0)
 
 ## Description
 
@@ -13,13 +13,13 @@ This benchmark compares serialization times, deserialization times and serializa
 ## Libraries
 
 * Manual Serialization with [BitPackingTools](https://github.com/emotitron/BitpackingTools)
-* [Protobuf](https://github.com/protocolbuffers/protobuf) (v3.18.1)
-* [MessagePack-CSharp](https://github.com/neuecc/MessagePack-CSharp) (v2.3.85)
-* [NetSerializer](https://github.com/tomba/netserializer) (v4.1.1)
-* [FlatBuffers](https://github.com/google/flatbuffers) (v2.0.4 - master [2ece9e2](https://github.com/google/flatbuffers/commit/2ece9e25b469a2b42012738ead29a918c890aa40))
-* [Protobuf-Net](https://github.com/protobuf-net/protobuf-net) (v3.0.101)
+* [Protobuf](https://github.com/protocolbuffers/protobuf) (v23.0)
+* [MessagePack-CSharp](https://github.com/neuecc/MessagePack-CSharp) (v2.5.108)
+* [NetSerializer](https://github.com/tomba/netserializer) (v4.1.2)
+* [FlatBuffers](https://github.com/google/flatbuffers) (v23.5.9 - master [14725d6](https://github.com/google/flatbuffers/commit/72b56fd0810c9a6cd38ea1c8f40feaa1bb4916b1))
+* [Protobuf-Net](https://github.com/protobuf-net/protobuf-net) (v3.2.16)
 * [MsgPack-CLI](https://github.com/msgpack/msgpack-cli) (v1.0.1)
-* [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json) (v13.0.1)
+* [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json) (v13.0.3)
 
 ## Benchmarks
 
@@ -76,7 +76,7 @@ DateTime=04/30/2021 11:07:23  SystemTag=Ubuntu VPS
 
 ### Reproduce
 
-Make sure you have [.Net 5 SDK](https://dotnet.microsoft.com/download) installed.  
+Make sure you have [.Net 6 SDK](https://dotnet.microsoft.com/download) installed.  
 
 You can reproduce the results by running `linux-benchmark.sh` on Linux or `win-benchmark.bat` on Windows. The benchmarks will take about 5 minutes to complete.
 

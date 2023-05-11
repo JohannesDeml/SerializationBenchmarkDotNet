@@ -9,7 +9,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System;
-using FlatBuffers;
+using Google.FlatBuffers;
 
 namespace SerializationBenchmark
 {
