@@ -27,7 +27,7 @@ namespace SerializationBenchmark
 			return Serialize(typeof(T), original, out messageSize);
 		}
 
-		protected override byte[] Serialize(Type type, ISerializationTarget original, out long messageSize)
+		protected override byte[] Serialize(Type type, object original, out long messageSize)
 		{
 			if (type == typeof(Vector3))
 			{
@@ -78,9 +78,9 @@ namespace SerializationBenchmark
 			return Deserialize(typeof(T), serializedObject);
 		}
 
-		protected override IFlatbufferObject Deserialize(Type type, byte[] serializedObject)
+		protected override IFlatbufferObject Deserialize(Type type, object serializedObject)
 		{
-			var buf = new ByteBuffer(serializedObject);
+			var buf = new ByteBuffer((byte[])serializedObject);
 
 			if (type == typeof(Vector3))
 			{
@@ -98,7 +98,7 @@ namespace SerializationBenchmark
 			throw new NotImplementedException($"Deserialization for type {type} not implemented!");
 		}
 
-		protected override bool GetResult(Type type, out ISerializationTarget result)
+		protected override bool GetResult(Type type, out object result)
 		{
 			var intermediateResult = DeserializationResults[type];
 

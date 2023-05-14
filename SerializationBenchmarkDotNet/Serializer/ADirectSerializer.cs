@@ -16,9 +16,9 @@ namespace SerializationBenchmark
 	/// Inherit from this class if the serializer deserializes to the original <see cref="ISerializationTarget"/> classes
 	/// </summary>
 	/// <typeparam name="TSerialization"></typeparam>
-	public abstract class ADirectSerializer<TSerialization> : ASerializer<TSerialization, ISerializationTarget>
+	public abstract class ADirectSerializer<TSerialization> : ASerializer<TSerialization, object>
 	{
-		protected override bool GetResult(Type type, out ISerializationTarget result)
+		protected override bool GetResult(Type type, out object result)
 		{
 			return DeserializationResults.TryGetValue(type, out result);
 		}

@@ -25,7 +25,7 @@ namespace SerializationBenchmark
 			return stream;
 		}
 
-		protected override MemoryStream Serialize(Type type, ISerializationTarget original, out long messageSize)
+		protected override MemoryStream Serialize(Type type, object original, out long messageSize)
 		{
 			var stream = new MemoryStream();
 			ProtoBuf.Serializer.Serialize(stream, original);
@@ -37,7 +37,7 @@ namespace SerializationBenchmark
 
 		#region Deserialization
 
-		protected override ISerializationTarget Deserialize<T>(MemoryStream stream)
+		protected override object Deserialize<T>(MemoryStream stream)
 		{
 			T copy = default(T);
 			stream.Position = 0;
@@ -45,12 +45,13 @@ namespace SerializationBenchmark
 			return copy;
 		}
 
-		protected override ISerializationTarget Deserialize(Type type, MemoryStream stream)
+		protected override object Deserialize(Type type, object streamObject)
 		{
+			MemoryStream stream = (MemoryStream)streamObject;
 			object copy;
 			stream.Position = 0;
 			copy = ProtoBuf.Serializer.Deserialize(type, stream);
-			return (ISerializationTarget) copy;
+			return (object) copy;
 		}
 
 		#endregion

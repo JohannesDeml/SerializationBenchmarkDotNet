@@ -19,15 +19,15 @@ namespace SerializationBenchmark
 		protected override byte[] Serialize<T>(T original, out long messageSize)
 		{
 			var bytes = new byte[128];
-			var bitSize = original.Serialize(ref bytes);
+			var bitSize = ((ISerializationTarget) original).Serialize(ref bytes);
 			messageSize = bitSize / 8;
 			return bytes;
 		}
 
-		protected override byte[] Serialize(Type type, ISerializationTarget original, out long messageSize)
+		protected override byte[] Serialize(Type type, object original, out long messageSize)
 		{
 			var bytes = new byte[128];
-			var bitSize = original.Serialize(ref bytes);
+			var bitSize = ((ISerializationTarget) original).Serialize(ref bytes);
 			messageSize = bitSize / 8;
 			return bytes;
 		}
@@ -38,13 +38,14 @@ namespace SerializationBenchmark
 
 		protected override ISerializationTarget Deserialize<T>(byte[] bytes)
 		{
-			var instance = Activator.CreateInstance<T>();
+			var instance = Activator.CreateInstance<T>() as ISerializationTarget;
 			instance.Deserialize(ref bytes);
 			return instance;
 		}
 
-		protected override ISerializationTarget Deserialize(Type type, byte[] bytes)
+		protected override ISerializationTarget Deserialize(Type type, object bytesObject)
 		{
+			byte[] bytes = (byte[])bytesObject;
 			var instance = (ISerializationTarget) Activator.CreateInstance(type);
 			instance.Deserialize(ref bytes);
 			return instance;

@@ -23,7 +23,7 @@ internal class Utf8JsonSerializer : ADirectSerializer<byte[]>
 		return bytes;
 	}
 
-	protected override byte[] Serialize(Type type, ISerializationTarget original, out long messageSize)
+	protected override byte[] Serialize(Type type, object original, out long messageSize)
 	{
 		var bytes = Utf8Json.JsonSerializer.Serialize(original);
 		messageSize = bytes.Length;
@@ -34,13 +34,14 @@ internal class Utf8JsonSerializer : ADirectSerializer<byte[]>
 
 	#region Deserialization
 
-	protected override ISerializationTarget Deserialize<T>(byte[] bytes)
+	protected override object Deserialize<T>(byte[] bytes)
 	{
 		return Utf8Json.JsonSerializer.Deserialize<T>(bytes);
 	}
 
-	protected override ISerializationTarget Deserialize(Type type, byte[] bytes)
+	protected override object Deserialize(Type type, object bytesObject)
 	{
+		byte[] bytes = (byte[])bytesObject;
 		if (type == typeof(Vector3))
 		{
 			return Utf8Json.JsonSerializer.Deserialize<Vector3>(bytes);

@@ -20,12 +20,12 @@ namespace SerializationBenchmark
 			if (IsTestRun())
 			{
 				Console.WriteLine("Debug Serialization Benchmark - Use Release setup for actual benchmarking!");
-				BenchmarkRunner.Run<SerializationBenchmark>(new DebugBenchmarkConfig());
+				BenchmarkRunner.Run<PersonSerializationBenchmark>(new DebugBenchmarkConfig());
 			}
 			else
 			{
 				Console.WriteLine("Run Serialization Benchmark");
-				BenchmarkRunner.Run<SerializationBenchmark>(new BenchmarkConfig());
+				BenchmarkRunner.Run<PersonSerializationBenchmark>(new BenchmarkConfig());
 			}
 		}
 

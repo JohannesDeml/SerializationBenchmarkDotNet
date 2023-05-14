@@ -14,43 +14,41 @@ using BenchmarkDotNet.Attributes;
 
 namespace SerializationBenchmark
 {
-	public class SerializationBenchmark : ISerializableBenchmark
+	public abstract class ASerializationBenchmark<T> : ISerializableBenchmark
 	{
 		[ParamsSource(nameof(Serializers))]
 		public ISerializer Serializer { get; set; }
 
 		[ParamsSource(nameof(Targets))]
-		public ISerializationTarget Target { get; set; }
+		public T Target { get; set; }
+
+		public object TargetObject
+		{
+			get
+			{
+				return Target;
+			}
+			set
+			{
+				Target = (T)value;
+			}
+		}
 
 		//[ParamsAllValues]
 		public bool Generic { get; set; } = true;
 
-		public IEnumerable<ISerializer> Serializers => new ISerializer[]
-		{
-			new Overhead(),
-			new ManualSerialization(),
-			new FlatBuffers(),
-			new Lz4MessagePackCSharp(),
-			new MessagePackCSharp(),
-			new MsgPack(),
-			new NetSerializer(),
-			new NewtonsoftJson(),
-			new ProtobufNet(),
-			new Protobuf(),
-			new Utf8JsonSerializer(),
-		};
+		public abstract IEnumerable<ISerializer> Serializers { get; }
 
-		public IEnumerable<ISerializationTarget> Targets => new ISerializationTarget[]
-		{
-			new Person {Age = 28, FirstName = "FirstName", LastName = "LastName", Sex = Sex.Female},
-			new Vector3(12.345f, 987.654f, 1.3f)
-		};
+		public abstract IEnumerable<T> Targets { get; }
 
 		[GlobalSetup(Target = nameof(Serialize))]
 		public void PrepareBenchmark()
 		{
-			// Needed for benchmarking the Protobuf library
-			Target.GenerateProtobufMessage();
+			if (Target as ISerializationTarget != null)
+			{
+				// Needed for benchmarking the Protobuf library
+				((ISerializationTarget)Target).GenerateProtobufMessage();
+			}
 		}
 
 		[GlobalSetup(Target = nameof(Deserialize))]
@@ -67,10 +65,16 @@ namespace SerializationBenchmark
 		{
 			if (Generic)
 			{
-				return Target.Serialize(Serializer);
+				return Serializer.BenchmarkSerialize(Target);
 			}
 			
 			return Serializer.BenchmarkSerialize(Target.GetType(), Target);
+		}
+
+		public long GetSerializedSize()
+		{
+			PrepareBenchmark();
+			return Serialize();
 		}
 
 		[Benchmark]
@@ -78,7 +82,7 @@ namespace SerializationBenchmark
 		{
 			if (Generic)
 			{
-				return Target.Deserialize(Serializer);
+				return Serializer.BenchmarkDeserialize(Target);
 			}
 			
 			return Serializer.BenchmarkDeserialize(Target.GetType(), Target);
@@ -96,7 +100,7 @@ namespace SerializationBenchmark
 			Serializer.Cleanup();
 		}
 
-		private void Validate(Type type, ISerializationTarget original)
+		private void Validate(Type type, T original)
 		{
 			bool valid = Serializer.Validate(type, original);
 			if (!valid)

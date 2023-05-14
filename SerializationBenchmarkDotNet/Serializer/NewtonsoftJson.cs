@@ -40,7 +40,7 @@ namespace SerializationBenchmark
 			return stream;
 		}
 
-		protected override MemoryStream Serialize(Type type, ISerializationTarget original, out long messageSize)
+		protected override MemoryStream Serialize(Type type, object original, out long messageSize)
 		{
 			var stream = new MemoryStream();
 			using var tw = new StreamWriter(stream, Encoding.UTF8, 1024, true);
@@ -59,7 +59,7 @@ namespace SerializationBenchmark
 
 		#region Deserialization
 
-		protected override ISerializationTarget Deserialize<T>(MemoryStream stream)
+		protected override object Deserialize<T>(MemoryStream stream)
 		{
 			T copy;
 			stream.Position = 0;
@@ -70,15 +70,16 @@ namespace SerializationBenchmark
 			return copy;
 		}
 
-		protected override ISerializationTarget Deserialize(Type type, MemoryStream stream)
+		protected override object Deserialize(Type type, object streamObject)
 		{
+			MemoryStream stream = (MemoryStream)streamObject;
 			object copy;
 			stream.Position = 0;
 			using var tr = new StreamReader(stream, Encoding.UTF8, false, 1024, true);
 			using var jr = new JsonTextReader(tr);
 			copy = jsonSerializer.Deserialize(jr, type);
 
-			return (ISerializationTarget) copy;
+			return (object) copy;
 		}
 
 		#endregion

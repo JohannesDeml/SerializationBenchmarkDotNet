@@ -69,11 +69,10 @@ namespace SerializationBenchmark
 
 			var paramInstances = benchmarkCase.Parameters;
 			instance.Serializer = SetInstanceValueSave(instance.Serializer, paramInstances, nameof(instance.Serializer));
-			instance.Target = SetInstanceValueSave(instance.Target, paramInstances, nameof(instance.Target));
+			instance.TargetObject = SetInstanceValueSave(instance.TargetObject, paramInstances, nameof(instance.TargetObject));
 			instance.Generic = SetInstanceValueSave(instance.Generic, paramInstances, nameof(instance.Generic));
 
-			instance.PrepareBenchmark();
-			var byteSize = instance.Serialize();
+			var byteSize = instance.GetSerializedSize();
 
 			var cultureInfo = summary.GetCultureInfo();
 			if (style.PrintUnitsInContent)

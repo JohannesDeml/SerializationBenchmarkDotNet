@@ -23,7 +23,7 @@ namespace SerializationBenchmark
 			return bytes;
 		}
 
-		protected override byte[] Serialize(Type type, ISerializationTarget original, out long messageSize)
+		protected override byte[] Serialize(Type type, object original, out long messageSize)
 		{
 			var bytes = MessagePack.MessagePackSerializer.Serialize(type, original);
 			messageSize = bytes.Length;
@@ -34,14 +34,14 @@ namespace SerializationBenchmark
 
 		#region Deserialization
 
-		protected override ISerializationTarget Deserialize<T>(byte[] bytes)
+		protected override object Deserialize<T>(byte[] bytes)
 		{
 			return MessagePack.MessagePackSerializer.Deserialize<T>(bytes);
 		}
 
-		protected override ISerializationTarget Deserialize(Type type, byte[] bytes)
+		protected override object Deserialize(Type type, object bytes)
 		{
-			return (ISerializationTarget) MessagePack.MessagePackSerializer.Deserialize(type, bytes);
+			return (object) MessagePack.MessagePackSerializer.Deserialize(type, (byte[])bytes);
 		}
 
 		#endregion

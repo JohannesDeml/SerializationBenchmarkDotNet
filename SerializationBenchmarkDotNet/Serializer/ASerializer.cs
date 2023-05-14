@@ -47,7 +47,7 @@ namespace SerializationBenchmark
 		}
 
 		/// <inheritdoc />
-		public long BenchmarkSerialize<T>(T original) where T : ISerializationTarget
+		public long BenchmarkSerialize<T>(T original)
 		{
 			var result = Serialize(original, out long messageSize);
 			serializationResults[typeof(T)] = new SerializationResult<TSerialization>(result, messageSize);
@@ -55,7 +55,7 @@ namespace SerializationBenchmark
 		}
 
 		/// <inheritdoc />
-		public long BenchmarkSerialize(Type type, ISerializationTarget original)
+		public long BenchmarkSerialize(Type type, object original)
 		{
 			var result = Serialize(type, original, out long messageSize);
 			serializationResults[type] = new SerializationResult<TSerialization>(result, messageSize);
@@ -63,7 +63,7 @@ namespace SerializationBenchmark
 		}
 
 		/// <inheritdoc />
-		public long BenchmarkDeserialize<T>(T original) where T : ISerializationTarget
+		public long BenchmarkDeserialize<T>(T original)
 		{
 			var type = typeof(T);
 			var target = serializationResults[type];
@@ -74,7 +74,7 @@ namespace SerializationBenchmark
 		}
 
 		/// <inheritdoc />
-		public long BenchmarkDeserialize(Type type, ISerializationTarget original)
+		public long BenchmarkDeserialize(Type type, object original)
 		{
 			var target = serializationResults[type];
 			var copy = Deserialize(type, target.Result);
@@ -84,11 +84,11 @@ namespace SerializationBenchmark
 		}
 
 		/// <inheritdoc />
-		public bool Validate(Type type, ISerializationTarget original)
+		public bool Validate(Type type, object original)
 		{
-			if (GetResult(type, out ISerializationTarget result))
+			if (GetResult(type, out object result))
 			{
-				var isValid = EqualityComparer<ISerializationTarget>.Default.Equals(original, result);
+				var isValid = original.Equals(result);
 				return isValid;
 			}
 
@@ -96,20 +96,20 @@ namespace SerializationBenchmark
 			return false;
 		}
 
-		protected abstract bool GetResult(Type type, out ISerializationTarget result);
+		protected abstract bool GetResult(Type type, out object result);
 
 		#region Serialization
 
-		protected abstract TSerialization Serialize<T>(T original, out long messageSize) where T : ISerializationTarget;
-		protected abstract TSerialization Serialize(Type type, ISerializationTarget original, out long messageSize);
+		protected abstract TSerialization Serialize<T>(T original, out long messageSize);
+		protected abstract TSerialization Serialize(Type type, object original, out long messageSize);
 		
 		#endregion
 
 		#region Deserialization
 
 		
-		protected abstract TDeserialization Deserialize<T>(TSerialization serializedObject) where T : ISerializationTarget;
-		protected abstract TDeserialization Deserialize(Type type, TSerialization serializedObject);
+		protected abstract TDeserialization Deserialize<T>(TSerialization serializedObject);
+		protected abstract TDeserialization Deserialize(Type type, object serializedObject);
 
 		#endregion
 

@@ -17,10 +17,9 @@ namespace SerializationBenchmark
 	public interface ISerializableBenchmark
 	{
 		ISerializer Serializer { get; set; }
-		ISerializationTarget Target { get; set; }
+		object TargetObject { get; set; }
 		bool Generic { get; set; }
 
-		void PrepareBenchmark();
-		long Serialize();
+		long GetSerializedSize();
 	}
 }

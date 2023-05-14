@@ -22,9 +22,9 @@ namespace SerializationBenchmark
 			return Serialize(typeof(T), original, out messageSize);
 		}
 
-		protected override byte[] Serialize(Type type, ISerializationTarget original, out long messageSize)
+		protected override byte[] Serialize(Type type, object original, out long messageSize)
 		{
-			var message = original.GetProtobufMessage();
+			var message = ((ISerializationTarget) original).GetProtobufMessage();
 			messageSize = message.CalculateSize();
 			var bytes = new byte[messageSize];
 			message.WriteTo(bytes);
@@ -40,8 +40,9 @@ namespace SerializationBenchmark
 			return Deserialize(typeof(T), bytes);
 		}
 
-		protected override IMessage Deserialize(Type type, byte[] bytes)
+		protected override IMessage Deserialize(Type type, object bytesObject)
 		{
+			byte[] bytes = (byte[])bytesObject;
 			if (type == typeof(Person))
 			{
 				var person = ProtobufObjects.Person.Parser.ParseFrom(bytes);
@@ -59,7 +60,7 @@ namespace SerializationBenchmark
 
 		#endregion
 
-		protected override bool GetResult(Type type, out ISerializationTarget result)
+		protected override bool GetResult(Type type, out object result)
 		{
 			var intermediateResult = DeserializationResults[type];
 
